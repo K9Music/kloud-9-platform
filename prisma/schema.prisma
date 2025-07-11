@@ -1,0 +1,33 @@
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "sqlite"
+  url      = "file:./dev.db"
+}
+
+model Profile {
+  id         Int      @id @default(autoincrement())
+  email      String   @unique
+  username   String   @unique
+  password   String
+  name       String
+  artType    String
+  bio        String
+  photoUrl   String
+  bannerUrl  String?
+  stageName  String?
+  genre      String?
+  style      String?
+  producerTag String?
+  engineerTag String?
+  directedBy String?
+  designerStyle String?
+  skitmakerName String?
+  vixenName String?
+  showcase   Json
+  lastUsernameChange DateTime?
+  usernameChangeCooldown Int?
+  createdAt  DateTime @default(now())
+}
