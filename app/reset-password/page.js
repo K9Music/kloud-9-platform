@@ -78,6 +78,7 @@ export default function ResetPasswordPage() {
                   required
                   autoComplete="new-password"
                   placeholder="Enter new password"
+                  disabled={loading}
                 />
               </div>
               <div className="mb-5">
@@ -94,6 +95,7 @@ export default function ResetPasswordPage() {
                   required
                   autoComplete="new-password"
                   placeholder="Confirm new password"
+                  disabled={loading}
                 />
               </div>
               {error && <div className="mb-4 text-red-400 text-center font-semibold">{error}</div>}
