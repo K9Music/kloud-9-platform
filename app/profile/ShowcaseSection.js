@@ -105,16 +105,16 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
 
   if (!editing) {
     return (
-      <div className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-        <h3 className="text-lg font-bold mb-4">Showcase / Portfolio</h3>
+      <div className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+        <h3 className="text-lg font-bold mb-4 text-cyan-200">Showcase / Portfolio</h3>
         <div className="mb-4">
-          {Object.keys(showcase).length === 0 && <span className="italic text-orange-300">No showcase links set.</span>}
+          {Object.keys(showcase).length === 0 && <span className="italic text-cyan-300">No showcase links set.</span>}
           {getShowcasePlatforms(artType).map((platform) => (
             showcase[`${platform}Checked`] ? (
               <div key={platform} className="mb-2">
                 <div className="flex items-center gap-2 mb-1">
-                  {PLATFORM_ICONS[platform] || <FaLink className="inline text-blue-500 mr-1" />}
-                  <span className="font-semibold">
+                  {PLATFORM_ICONS[platform] || <FaLink className="inline text-cyan-400 mr-1" />}
+                  <span className="font-semibold text-cyan-200">
                     {platform.charAt(0).toUpperCase() + platform.slice(1)}
                   </span>
                 </div>
@@ -127,7 +127,7 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
                           href={showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] || showcase[platform] || ''}
                           target="_blank"
                           rel="noopener noreferrer"
-                          className="text-orange-200 underline"
+                          className="text-cyan-200 underline"
                         >
                           {showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] || showcase[platform] || ''}
                         </a>
@@ -140,7 +140,7 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
         </div>
         <button
           type="button"
-          className="py-2 px-6 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-md transition"
           onClick={() => setEditing(true)}
         >
           Edit
@@ -151,9 +151,9 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-      <h3 className="text-lg font-bold mb-4">Showcase / Portfolio</h3>
-      <p className="text-orange-200 text-sm mb-2">
+    <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+      <h3 className="text-lg font-bold mb-4 text-cyan-200">Showcase / Portfolio</h3>
+      <p className="text-cyan-200 text-sm mb-2">
         Add links to your works on any of these platforms. If your platform is not listed, use the "Other Platform" option below.
       </p>
       <div className="flex flex-wrap gap-4 mb-4">
@@ -161,17 +161,17 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
           ...getShowcasePlatforms(artType),
           'otherPlatform',
         ].map((platform) => (
-          <label key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer shadow bg-gray-800 text-gray-200">
+          <label key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer shadow bg-slate-800 text-cyan-100">
             <input
               type="checkbox"
               checked={!!showcase[`${platform}Checked`]}
               onChange={() => handleCheckboxChange(platform)}
-              className="accent-orange-500 w-5 h-5"
+              className="accent-cyan-500 w-5 h-5"
             />
             {platform === 'otherPlatform'
-              ? <FaLink className="inline text-blue-500 mr-1" />
-              : (PLATFORM_ICONS[platform] || <FaLink className="inline text-blue-500 mr-1" />)}
-            <span className="font-semibold">
+              ? <FaLink className="inline text-cyan-400 mr-1" />
+              : (PLATFORM_ICONS[platform] || <FaLink className="inline text-cyan-400 mr-1" />)}
+            <span className="font-semibold text-cyan-200">
               {platform === 'otherPlatform'
                 ? 'Other Platform'
                 : platform.charAt(0).toUpperCase() + platform.slice(1)}
@@ -187,9 +187,9 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
           <div key={platform} className="mb-2">
             <div className="flex items-center gap-2 mb-1">
               {platform === 'otherPlatform'
-                ? <FaLink className="inline text-blue-500 mr-1" />
-                : (PLATFORM_ICONS[platform] || <FaLink className="inline text-blue-500 mr-1" />)}
-              <span className="font-semibold">
+                ? <FaLink className="inline text-cyan-400 mr-1" />
+                : (PLATFORM_ICONS[platform] || <FaLink className="inline text-cyan-400 mr-1" />)}
+              <span className="font-semibold text-cyan-200">
                 {platform === 'otherPlatform'
                   ? 'Other Platform'
                   : platform.charAt(0).toUpperCase() + platform.slice(1)}
@@ -211,7 +211,7 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
                         ? showcase[`${platform}${idx > 0 ? idx + 1 : ''}`]
                         : showcase[platform] || ''}
                       onChange={e => handleShowcaseChange(platform, idx, e.target.value)}
-                      className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-900 text-orange-100 focus:ring-2 focus:ring-orange-400"
+                      className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400"
                       required
                     />
                     {idx > 0 && (
@@ -232,7 +232,7 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
               <button
                 type="button"
                 onClick={() => handleAddShowcase(platform)}
-                className="text-orange-400 hover:text-orange-600 text-sm font-semibold"
+                className="text-cyan-400 hover:text-cyan-600 text-sm font-semibold"
               >
                 + Add another link
               </button>
@@ -243,14 +243,14 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
       <div className="flex gap-2 mt-4">
         <button
           type="submit"
-          className="py-2 px-6 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-md transition"
           disabled={saving}
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
         <button
           type="button"
-          className="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-slate-600 hover:bg-slate-700 text-white font-bold text-md transition"
           onClick={handleCancel}
           disabled={saving}
         >

@@ -10,6 +10,8 @@ import BioSection from './BioSection';
 import ImagesSection from './ImagesSection';
 import ShowcaseSection from './ShowcaseSection';
 import ProfileDetailsSection from './ProfileDetailsSection';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
 
 const NON_EDITABLE_FIELDS = [
   { label: 'Email', key: 'email' },
@@ -83,6 +85,15 @@ const getShowcasePlatforms = (artType) => {
   const type = ART_TYPES.find((t) => t.value === artType);
   return type ? type.showcases : [];
 };
+
+// Utility to convert a string to title case (each word capitalized)
+function toSentenceCase(str) {
+  if (!str) return '';
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
 
 export default function ProfilePage() {
   const { data: session, status } = useSession();
@@ -163,108 +174,112 @@ export default function ProfilePage() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-orange-900 to-teal-900">
-        <div className="text-orange-100 text-xl">Loading profile...</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
+        <div className="text-cyan-100 text-xl">Loading profile...</div>
       </div>
     );
   }
   if (!profile) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-orange-900 to-teal-900">
-        <div className="text-orange-100 text-xl">{error || 'Error loading profile. Please try again later.'}</div>
+      <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
+        <div className="text-cyan-100 text-xl">{error || 'Error loading profile. Please try again later.'}</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen flex items-center justify-center bg-gradient-to-br from-black via-orange-900 to-teal-900">
-      <div className="w-full max-w-5xl p-8 bg-gray-900 rounded-lg shadow-lg text-orange-100 relative">
-        <a
-          href={`/profile/${profile.username}`}
-          target="_blank"
-          rel="noopener noreferrer"
-          className="absolute right-8 top-8 px-4 py-2 bg-orange-600 text-white rounded hover:bg-orange-700 text-sm font-semibold shadow"
-        >
-          View Public Profile
-        </a>
-        <h2 className="text-2xl font-bold mb-6 text-center">My Profile</h2>
-        {/* Non-editable fields */}
-        <div className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-          <div className="mb-4 text-orange-300 text-xs italic">
-            <strong>Email or art type changes:</strong><br />
-            For security reasons, these fields can only be updated by our support team.<br />
-            <a
-              href="mailto:support@k9music.com"
-              className="underline text-orange-200 hover:text-orange-400"
-              target="_blank"
-              rel="noopener noreferrer"
-            >
-              Contact support
-            </a> to request a change.
+    <div className="min-h-screen flex flex-col bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900">
+      <Header />
+      <div className="flex-1 flex items-center justify-center py-12">
+        <div className="w-full max-w-5xl p-8 glassmorphism rounded-2xl shadow-xl text-cyan-100 relative border border-white/10">
+          <a
+            href={`/profile/${profile.username}`}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="absolute right-8 top-8 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 text-sm font-semibold shadow"
+          >
+            View Public Profile
+          </a>
+          <h2 className="text-2xl font-bold mb-6 text-center">My Profile</h2>
+          {/* Non-editable fields */}
+          <div className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+            <div className="mb-4 text-cyan-300 text-xs italic">
+              <strong>Email or art type changes:</strong><br />
+              For security reasons, these fields can only be updated by our support team.<br />
+              <a
+                href="mailto:support@k9music.com"
+                className="underline text-cyan-200 hover:text-cyan-400"
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                Contact support
+              </a> to request a change.
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1 font-semibold">Email</label>
+              <input
+                type="text"
+                value={profile.email || ''}
+                disabled
+                className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-300 opacity-60 cursor-not-allowed"
+                readOnly
+              />
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1 font-semibold">Art Type</label>
+              <input
+                type="text"
+                value={toSentenceCase(profile.artType) || ''}
+                disabled
+                className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-300 opacity-60 cursor-not-allowed"
+                readOnly
+              />
+            </div>
           </div>
-          <div className="mb-4">
-            <label className="block mb-1 font-semibold">Email</label>
-            <input
-              type="text"
-              value={profile.email || ''}
-              disabled
-              className="block w-full p-3 rounded-lg border border-gray-700 bg-gray-900 text-orange-300 opacity-60 cursor-not-allowed"
-              readOnly
-            />
-          </div>
-          <div className="mb-4">
-            <label className="block mb-1 font-semibold">Art Type</label>
-            <input
-              type="text"
-              value={profile.artType || ''}
-              disabled
-              className="block w-full p-3 rounded-lg border border-gray-700 bg-gray-900 text-orange-300 opacity-60 cursor-not-allowed"
-              readOnly
-            />
-          </div>
+          {/* Reordered sections to match public profile layout */}
+          <ImagesSection
+            initialPhotoUrl={profile.photoUrl}
+            initialBannerUrl={profile.bannerUrl}
+            onSave={handleImagesSave}
+          />
+          <AccountInfoSection
+            initialUsername={profile.username}
+            initialName={profile.name}
+            artType={profile.artType}
+            lastUsernameChange={profile.lastUsernameChange}
+            usernameChangeCooldown={profile.usernameChangeCooldown}
+            onSave={handleAccountInfoSave}
+          />
+          <ProfileDetailsSection
+            artType={profile.artType}
+            genre={profile.genre}
+            stageName={profile.stageName}
+            producerTag={profile.producerTag}
+            engineerTag={profile.engineerTag}
+            directedBy={profile.directedBy}
+            designerStyle={profile.designerStyle}
+            skitmakerName={profile.skitmakerName}
+            vixenName={profile.vixenName}
+            onSave={async (fields) => {
+              const res = await fetch(`/api/profiles/${profile.id}`, {
+                method: 'PATCH',
+                headers: { 'Content-Type': 'application/json' },
+                body: JSON.stringify(fields),
+              });
+              if (!res.ok) throw new Error('Failed to update profile details.');
+              setProfile((prev) => ({ ...prev, ...fields }));
+            }}
+          />
+          <BioSection initialBio={profile.bio} onSave={handleBioSave} />
+          <ShowcaseSection
+            initialShowcase={profile.showcase}
+            artType={profile.artType}
+            onSave={handleShowcaseSave}
+          />
+          <PasswordSection onSave={handlePasswordSave} />
         </div>
-        {/* Reordered sections to match public profile layout */}
-        <ImagesSection
-          initialPhotoUrl={profile.photoUrl}
-          initialBannerUrl={profile.bannerUrl}
-          onSave={handleImagesSave}
-        />
-        <AccountInfoSection
-          initialUsername={profile.username}
-          initialName={profile.name}
-          artType={profile.artType}
-          lastUsernameChange={profile.lastUsernameChange}
-          usernameChangeCooldown={profile.usernameChangeCooldown}
-          onSave={handleAccountInfoSave}
-        />
-        <ProfileDetailsSection
-          artType={profile.artType}
-          genre={profile.genre}
-          stageName={profile.stageName}
-          producerTag={profile.producerTag}
-          engineerTag={profile.engineerTag}
-          directedBy={profile.directedBy}
-          designerStyle={profile.designerStyle}
-          skitmakerName={profile.skitmakerName}
-          vixenName={profile.vixenName}
-          onSave={async (fields) => {
-            const res = await fetch(`/api/profiles/${profile.id}`, {
-              method: 'PATCH',
-              headers: { 'Content-Type': 'application/json' },
-              body: JSON.stringify(fields),
-            });
-            if (!res.ok) throw new Error('Failed to update profile details.');
-            setProfile((prev) => ({ ...prev, ...fields }));
-          }}
-        />
-        <BioSection initialBio={profile.bio} onSave={handleBioSave} />
-        <ShowcaseSection
-          initialShowcase={profile.showcase}
-          artType={profile.artType}
-          onSave={handleShowcaseSave}
-        />
-        <PasswordSection onSave={handlePasswordSave} />
       </div>
+      <Footer />
     </div>
   );
 } 

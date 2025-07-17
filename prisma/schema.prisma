@@ -30,4 +30,6 @@ model Profile {
   lastUsernameChange DateTime?
   usernameChangeCooldown Int?
   createdAt  DateTime @default(now())
+  resetToken String?
+  resetTokenExpiry DateTime?
 }

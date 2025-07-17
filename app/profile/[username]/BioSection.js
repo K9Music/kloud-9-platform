@@ -9,8 +9,8 @@ export default function BioSection({ bio }) {
       <div
         className={
           expanded
-            ? 'bg-gray-800 rounded-lg p-3 text-orange-100 whitespace-pre-line transition-all duration-300'
-            : 'bg-gray-800 rounded-lg p-3 text-orange-100 whitespace-pre-line line-clamp-4 transition-all duration-300'
+            ? 'bg-gray-800 rounded-lg p-3 text-cyan-100 whitespace-pre-line transition-all duration-300'
+            : 'bg-gray-800 rounded-lg p-3 text-cyan-100 whitespace-pre-line line-clamp-4 transition-all duration-300'
         }
         style={{ position: 'relative' }}
       >
@@ -24,7 +24,7 @@ export default function BioSection({ bio }) {
             <div className="absolute right-3 bottom-2 z-10 flex justify-end">
               <button
                 type="button"
-                className="text-sm text-orange-300 hover:text-orange-100 font-semibold focus:outline-none bg-gray-900/80 px-2 py-1 rounded"
+                className="text-sm text-cyan-300 hover:text-cyan-100 font-semibold focus:outline-none bg-gray-900/80 px-2 py-1 rounded"
                 onClick={() => setExpanded(true)}
                 aria-expanded={expanded}
               >
@@ -37,7 +37,7 @@ export default function BioSection({ bio }) {
           <div className="flex justify-end mt-2">
             <button
               type="button"
-              className="text-sm text-orange-300 hover:text-orange-100 font-semibold focus:outline-none bg-gray-900/80 px-2 py-1 rounded"
+              className="text-sm text-cyan-300 hover:text-cyan-100 font-semibold focus:outline-none bg-gray-900/80 px-2 py-1 rounded"
               onClick={() => setExpanded(false)}
               aria-expanded={expanded}
             >

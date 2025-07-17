@@ -10,17 +10,26 @@ const handler = NextAuth({
     CredentialsProvider({
       name: 'Credentials',
       credentials: {
-        email: { label: 'Email', type: 'text', placeholder: 'your@email.com' },
+        email: { label: 'Email or Username', type: 'text', placeholder: 'your@email.com or username' },
         password: { label: 'Password', type: 'password' },
       },
       async authorize(credentials) {
         if (!credentials?.email || !credentials?.password) {
           return null;
         }
-        // Find user by email
-        const user = await prisma.profile.findUnique({
-          where: { email: credentials.email },
-        });
+        // Determine if input is email or username
+        const isEmail = credentials.email.includes('@');
+        const input = credentials.email;
+        let user;
+        if (isEmail) {
+          user = await prisma.profile.findUnique({
+            where: { email: input.toLowerCase() },
+          });
+        } else {
+          user = await prisma.profile.findUnique({
+            where: { username: input.toLowerCase() },
+          });
+        }
         if (!user) return null;
         // Compare password
         const isValid = await bcrypt.compare(credentials.password, user.password);

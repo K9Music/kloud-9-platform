@@ -63,8 +63,8 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
 
   if (!editing) {
     return (
-      <div className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-        <h3 className="text-lg font-bold mb-4">Profile Photo & Banner</h3>
+      <div className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+        <h3 className="text-lg font-bold mb-4 text-cyan-200">Profile Photo & Banner</h3>
         <div className="mb-6 flex flex-col md:flex-row gap-8 items-center">
           <div className="flex flex-col items-center">
             <div className="relative w-32 h-32 mb-2">
@@ -72,15 +72,15 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
                 <img
                   src={photoUrl}
                   alt="Profile"
-                  className="w-32 h-32 rounded-full object-cover border-4 border-orange-400 bg-gray-800"
+                  className="w-32 h-32 rounded-full object-cover border-4 border-cyan-400 bg-slate-800"
                 />
               ) : (
-                <div className="w-32 h-32 rounded-full flex items-center justify-center border-4 border-orange-400 bg-gray-800">
-                  <FaCamera className="text-3xl text-orange-300" aria-label="Add profile photo" />
+                <div className="w-32 h-32 rounded-full flex items-center justify-center border-4 border-cyan-400 bg-slate-800">
+                  <FaCamera className="text-3xl text-cyan-300" aria-label="Add profile photo" />
                 </div>
               )}
             </div>
-            <span className="text-sm text-orange-200">Profile Photo</span>
+            <span className="text-sm text-cyan-200">Profile Photo</span>
           </div>
           <div className="flex flex-col items-center flex-1">
             <div className="relative w-full h-32 mb-2">
@@ -88,20 +88,20 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
                 <img
                   src={bannerUrl}
                   alt="Banner"
-                  className="w-full h-32 object-cover rounded-lg border-2 border-orange-400 bg-gray-800"
+                  className="w-full h-32 object-cover rounded-lg border-2 border-cyan-400 bg-slate-800"
                 />
               ) : (
-                <div className="w-full h-32 flex items-center justify-center rounded-lg border-2 border-orange-400 bg-gray-800">
-                  <FaCamera className="text-3xl text-orange-300" aria-label="Add banner image" />
+                <div className="w-full h-32 flex items-center justify-center rounded-lg border-2 border-cyan-400 bg-slate-800">
+                  <FaCamera className="text-3xl text-cyan-300" aria-label="Add banner image" />
                 </div>
               )}
             </div>
-            <span className="text-sm text-orange-200">Banner Image <span className="text-xs text-orange-300">(optional)</span></span>
+            <span className="text-sm text-cyan-200">Banner Image <span className="text-xs text-cyan-300">(optional)</span></span>
           </div>
         </div>
         <button
           type="button"
-          className="py-2 px-6 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-md transition"
           onClick={() => setEditing(true)}
         >
           Edit
@@ -112,8 +112,8 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-      <h3 className="text-lg font-bold mb-4">Profile Photo & Banner</h3>
+    <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+      <h3 className="text-lg font-bold mb-4 text-cyan-200">Profile Photo & Banner</h3>
       <div className="mb-6 flex flex-col md:flex-row gap-8 items-center">
         <div className="flex flex-col items-center">
           <div className="relative w-32 h-32 mb-2">
@@ -121,11 +121,11 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
               <img
                 src={photoPreview || photoUrl}
                 alt="Profile"
-                className="w-32 h-32 rounded-full object-cover border-4 border-orange-400 bg-gray-800"
+                className="w-32 h-32 rounded-full object-cover border-4 border-cyan-400 bg-slate-800"
               />
             ) : (
-              <div className="w-32 h-32 rounded-full flex items-center justify-center border-4 border-orange-400 bg-gray-800">
-                <FaCamera className="text-3xl text-orange-300" aria-label="Add profile photo" />
+              <div className="w-32 h-32 rounded-full flex items-center justify-center border-4 border-cyan-400 bg-slate-800">
+                <FaCamera className="text-3xl text-cyan-300" aria-label="Add profile photo" />
               </div>
             )}
             <label className="absolute bottom-2 right-2 bg-black/60 rounded-full p-2 cursor-pointer">
@@ -138,7 +138,7 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
               <FaCamera className="text-white" />
             </label>
           </div>
-          <span className="text-sm text-orange-200">Change Profile Photo</span>
+          <span className="text-sm text-cyan-200">Change Profile Photo</span>
         </div>
         <div className="flex flex-col items-center flex-1">
           <div className="relative w-full h-32 mb-2">
@@ -146,11 +146,11 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
               <img
                 src={bannerPreview || bannerUrl}
                 alt="Banner"
-                className="w-full h-32 object-cover rounded-lg border-2 border-orange-400 bg-gray-800"
+                className="w-full h-32 object-cover rounded-lg border-2 border-cyan-400 bg-slate-800"
               />
             ) : (
-              <div className="w-full h-32 flex items-center justify-center rounded-lg border-2 border-orange-400 bg-gray-800">
-                <FaCamera className="text-3xl text-orange-300" aria-label="Add banner image" />
+              <div className="w-full h-32 flex items-center justify-center rounded-lg border-2 border-cyan-400 bg-slate-800">
+                <FaCamera className="text-3xl text-cyan-300" aria-label="Add banner image" />
               </div>
             )}
             <label className="absolute bottom-2 right-2 bg-black/60 rounded-full p-2 cursor-pointer">
@@ -163,20 +163,20 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
               <FaCamera className="text-white" />
             </label>
           </div>
-          <span className="text-sm text-orange-200">Change Banner Image <span className="text-xs text-orange-300">(optional)</span></span>
+          <span className="text-sm text-cyan-200">Change Banner Image <span className="text-xs text-cyan-300">(optional)</span></span>
         </div>
       </div>
       <div className="flex gap-2">
         <button
           type="submit"
-          className="py-2 px-6 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-md transition"
           disabled={saving}
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
         <button
           type="button"
-          className="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-slate-600 hover:bg-slate-700 text-white font-bold text-md transition"
           onClick={handleCancel}
           disabled={saving}
         >

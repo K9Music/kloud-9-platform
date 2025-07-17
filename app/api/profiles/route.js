@@ -13,7 +13,7 @@ export async function POST(req) {
     }
 
     // Check for existing user
-    const existing = await prisma.profile.findUnique({ where: { username: data.username } });
+    const existing = await prisma.profile.findUnique({ where: { username: data.username.toLowerCase() } });
     if (existing) {
       return new Response(JSON.stringify({ error: 'Username already exists.' }), { status: 409 });
     }
@@ -24,7 +24,7 @@ export async function POST(req) {
     // Save profile
     const profile = await prisma.profile.create({
       data: {
-        username: data.username,
+        username: data.username.toLowerCase(),
         name: data.name,
         stageName: data.stageName,
         genre: data.genre,

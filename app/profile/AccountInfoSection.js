@@ -40,9 +40,9 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
       return;
     }
     try {
-      await onSave({ username, name });
+      await onSave({ username: username.toLowerCase(), name });
       setMessage('Account info updated!');
-      setOriginalUsername(username);
+      setOriginalUsername(username.toLowerCase());
       setOriginalName(name);
       setEditing(false);
     } catch (err) {
@@ -61,28 +61,29 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
 
   if (!editing) {
     return (
-      <div className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-        <h3 className="text-lg font-bold mb-4">Account Info</h3>
+      <div className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+        <h3 className="text-lg font-bold mb-4 text-cyan-200">Account Info</h3>
         <div className="mb-4">
-          <label className="block text-sm font-bold text-orange-300 mb-1 uppercase tracking-wider">Username</label>
-          <div className="text-base font-normal text-orange-100 bg-gray-800 rounded px-3 py-2">{username}</div>
-          <div className="text-xs text-orange-300 mb-2 italic mt-3">
+          <label className="block text-sm font-bold text-cyan-300 mb-1 uppercase tracking-wider">Username</label>
+          <div className="text-base font-normal text-cyan-100 bg-slate-900 rounded px-3 py-2">{username}</div>
+          <div className="text-xs text-cyan-300 mb-2 italic mt-3">
             You can change your username once every 90 days. Changing your username will also update your public profile link (e.g., <span className="font-mono">k9music.com/profile/&lt;new-username&gt;</span>).
           </div>
+          <div className="text-cyan-400 text-xs mt-1">Usernames are always lowercase and cannot contain spaces.</div>
           {!canChangeUsername && nextChangeDate && (
-            <div className="text-xs text-orange-300 mt-1 italic">
+            <div className="text-xs text-cyan-300 mt-1 italic">
               You can change your username again in {nextChangeDate.days} day{nextChangeDate.days !== 1 ? 's' : ''} (on {nextChangeDate.date.toLocaleDateString()}).
             </div>
           )}
         </div>
-        <hr className="my-4 border-orange-800" />
+        <hr className="my-4 border-cyan-800" />
         <div className="mb-4">
-          <label className="block text-sm font-bold text-orange-300 mb-1 uppercase tracking-wider">Name</label>
-          <div className="text-base font-normal text-orange-100 bg-gray-800 rounded px-3 py-2">{name}</div>
+          <label className="block text-sm font-bold text-cyan-300 mb-1 uppercase tracking-wider">Name</label>
+          <div className="text-base font-normal text-cyan-100 bg-slate-900 rounded px-3 py-2">{name}</div>
         </div>
         <button
           type="button"
-          className="py-2 px-6 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-md transition"
           onClick={() => setEditing(true)}
         >
           Edit
@@ -93,48 +94,49 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
   }
 
   return (
-    <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-lg bg-gray-800 shadow">
-      <h3 className="text-lg font-bold mb-4">Account Info</h3>
+    <form onSubmit={handleSubmit} className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
+      <h3 className="text-lg font-bold mb-4 text-cyan-200">Account Info</h3>
       <div className="mb-4">
-        <label className="block mb-1 font-semibold">Username</label>
-        <div className="text-xs text-orange-300 mb-2">
+        <label className="block mb-1 font-semibold text-cyan-300">Username</label>
+        <div className="text-xs text-cyan-300 mb-2">
           You can change your username once every 90 days. Changing your username will also update your public profile link (e.g., <span className="font-mono">k9music.com/profile/&lt;new-username&gt;</span>).
         </div>
         <input
           type="text"
           value={username}
-          onChange={e => setUsername(e.target.value)}
-          className={`block w-full p-3 rounded-lg border border-gray-300 bg-gray-900 text-orange-100 focus:ring-2 focus:ring-orange-400 ${!canChangeUsername ? 'opacity-60 cursor-not-allowed' : ''}`}
+          onChange={e => setUsername(e.target.value.toLowerCase())}
+          className={`block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400 ${!canChangeUsername ? 'opacity-60 cursor-not-allowed' : ''}`}
           autoComplete="off"
           disabled={!canChangeUsername}
         />
+        <div className="text-cyan-400 text-xs mt-1">Usernames are always lowercase and cannot contain spaces.</div>
         {!canChangeUsername && nextChangeDate && (
-          <div className="text-xs text-orange-300 mt-1">
+          <div className="text-xs text-cyan-300 mt-1">
             You can change your username again in {nextChangeDate.days} day{nextChangeDate.days !== 1 ? 's' : ''} (on {nextChangeDate.date.toLocaleDateString()}).
           </div>
         )}
       </div>
       <div className="mb-4">
-        <label className="block mb-1 font-semibold">Name</label>
+        <label className="block mb-1 font-semibold text-cyan-300">Name</label>
         <input
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
-          className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-900 text-orange-100 focus:ring-2 focus:ring-orange-400"
+          className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400"
           autoComplete="off"
         />
       </div>
       <div className="flex gap-2">
         <button
           type="submit"
-          className="py-2 px-6 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-bold text-md transition"
           disabled={saving}
         >
           {saving ? 'Saving...' : 'Save'}
         </button>
         <button
           type="button"
-          className="py-2 px-6 rounded-lg bg-gray-600 hover:bg-gray-700 text-white font-bold text-md transition"
+          className="py-2 px-6 rounded-lg bg-slate-600 hover:bg-slate-700 text-white font-bold text-md transition"
           onClick={handleCancel}
           disabled={saving}
         >

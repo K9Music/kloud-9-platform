@@ -1,6 +1,9 @@
 'use client';
 import { useState, useEffect } from 'react';
-import { FaSpotify, FaYoutube, FaSoundcloud, FaApple, FaMusic, FaLink, FaEye, FaEyeSlash, FaInstagram, FaTiktok, FaImage, FaCamera } from 'react-icons/fa';
+import { FaSpotify, FaYoutube, FaSoundcloud, FaApple, FaMusic, FaLink, FaEye, FaEyeSlash, FaInstagram, FaTiktok, FaImage, FaCamera, FaChevronLeft, FaChevronRight, FaCheckCircle } from 'react-icons/fa';
+import Header from '../../components/Header';
+import Footer from '../../components/Footer';
+import Link from 'next/link';
 // Simulated registered usernames (replace with API call in production)
 const REGISTERED_USERNAMES = ['john', 'jane', 'beatking', 'vixenchic'];
 const PLATFORM_ICONS = {
@@ -44,6 +47,23 @@ const STYLE_OPTIONS = [
 ...DESIGN_STYLE_OPTIONS,
 'Vocal', 'Instrumental', 'Live', 'Studio', 'Experimental', 'Traditional', 'Modern', 'Fusion', 'Acoustic', 'Freestyle', 'Cover', 'Remix', 'Original'
 ];
+
+const STEPS = [
+  'Account Details',
+  'Profile Details',
+  'Showcase',
+  'Confirmation'
+];
+
+// Utility to convert a string to title case (each word capitalized)
+function toSentenceCase(str) {
+  if (!str) return '';
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
+}
+
 export default function CreateProfilePage() {
   const [form, setForm] = useState({
     username: '',
@@ -84,6 +104,9 @@ const passwordRequirements = [
 { label: "At least one lowercase letter", test: (pw) => /[a-z]/.test(pw) },
 { label: "At least one number", test: (pw) => /\d/.test(pw) },
 ];
+const [submitting, setSubmitting] = useState(false);
+const [step, setStep] = useState(0);
+
 useEffect(() => {
 if (form.username.trim() && REGISTERED_USERNAMES.includes(form.username.trim().toLowerCase())) {
 setUsernameTaken(true);
@@ -167,7 +190,12 @@ const type = ART_TYPES.find((t) => t.value === artType);
 return type ? type.showcases : [];
 };
   const handleChange = (e) => {
-    setForm({ ...form, [e.target.name]: e.target.value });
+    const { name, value } = e.target;
+    if (name === 'username') {
+      setForm({ ...form, [name]: value.toLowerCase() });
+    } else {
+      setForm({ ...form, [name]: value });
+    }
   };
   const handleShowcaseChange = (platform, idx, value) => {
     setForm((prev) => ({
@@ -223,12 +251,14 @@ const handleRemoveCustomLink = (idx) => {
     return { ...prev, showcase };
   });
 };
-const passwordChecklistMet = passwordRequirements.map((req) => req.test(form.password));
+const passwordStrength = passwordRequirements.reduce((acc, req) => acc + (req.test(form.password) ? 1 : 0), 0);
   const handleSubmit = async (e) => {
     e.preventDefault();
     setMessage('');
+    setSubmitting(true);
 if (usernameTaken) {
 setMessage('Username is already taken.');
+setSubmitting(false);
 return;
 }
 // Example: send to your API route
@@ -247,66 +277,35 @@ setMessage(data.error || 'Server error.');
     } catch (err) {
 setMessage('Server error.');
     }
+    setSubmitting(false);
   };
-  return (
-<div className="min-h-screen bg-gradient-to-br from-black via-orange-900 to-teal-900 flex items-center justify-center bg-fixed bg-[radial-gradient(ellipse_at_top_left,var(--tw-gradient-stops))]">
-<form onSubmit={handleSubmit} autoComplete="off" className="w-full max-w-3xl mx-auto p-8 bg-gray-900 rounded-lg shadow-lg text-orange-100">
-<h2 className="text-2xl font-bold mb-4">Create Your Profile</h2>
-        {/* Profile Photo Upload */}
-        <div className="mb-4 flex flex-col items-center">
-          <div className="relative w-24 h-24">
-            {photoPreview || form.photoUrl ? (
-              <img
-                src={photoPreview || form.photoUrl}
-                alt="Profile"
-                className="w-24 h-24 rounded-full object-cover border-2 border-orange-400 bg-gray-800"
-              />
-            ) : (
-              <div className="w-24 h-24 rounded-full flex items-center justify-center border-2 border-orange-400 bg-gray-800">
-                <FaCamera className="text-3xl text-orange-300" aria-label="Add profile photo" />
-              </div>
-            )}
-            <label className="absolute bottom-2 right-2 bg-black/60 rounded-full p-2 cursor-pointer">
-              <input
-                type="file"
-                name="photoUrl"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e, 'photo')}
-                className="hidden"
-              />
-              <FaCamera className="text-white" />
-            </label>
-          </div>
-          <span className="text-sm text-orange-200 mt-2">Change Profile Photo</span>
+
+  // Step validation
+  const isAccountStepValid = form.username && form.email && form.password && form.confirmPassword && form.password === form.confirmPassword && passwordStrength >= 3 && !usernameTaken;
+  const isProfileStepValid = form.name && form.artType && form.bio && form.photoUrl;
+  const isShowcaseStepValid = Object.keys(form.showcase).some(key => !key.endsWith('Checked') && form.showcase[key]);
+
+  // Stepper UI
+  const Stepper = () => (
+    <div className="flex flex-col sm:flex-row items-center justify-center gap-2 sm:gap-4 mb-8">
+      {STEPS.map((label, idx) => (
+        <div key={label} className="flex items-center gap-2 mb-2 sm:mb-0">
+          <div className={`w-8 h-8 flex items-center justify-center rounded-full border-2 ${step >= idx ? 'border-cyan-400 bg-cyan-600 text-white' : 'border-gray-500 bg-gray-800 text-gray-400'} font-bold`}>{step > idx ? <FaCheckCircle className="text-green-400" /> : idx + 1}</div>
+          <span className={`text-xs sm:text-sm font-semibold ${step === idx ? 'text-cyan-200' : 'text-gray-400'}`}>{label}</span>
+          {idx < STEPS.length - 1 && <div className="hidden sm:block w-8 h-1 bg-cyan-800 rounded-full" />}
         </div>
-        {/* Banner Image Upload */}
-        <div className="mb-4">
-          <div className="relative w-full h-32">
-            {bannerPreview || form.bannerUrl ? (
-              <img
-                src={bannerPreview || form.bannerUrl}
-                alt="Banner"
-                className="w-full h-32 object-cover rounded-lg border-2 border-orange-400 bg-gray-800"
-              />
-            ) : (
-              <div className="w-full h-32 flex items-center justify-center rounded-lg border-2 border-orange-400 bg-gray-800">
-                <FaCamera className="text-3xl text-orange-300" aria-label="Add banner image" />
+      ))}
               </div>
-            )}
-            <label className="absolute bottom-2 right-2 bg-black/60 rounded-full p-2 cursor-pointer">
-              <input
-                type="file"
-                name="bannerUrl"
-                accept="image/*"
-                onChange={(e) => handleImageUpload(e, 'banner')}
-                className="hidden"
-              />
-              <FaCamera className="text-white" />
-            </label>
-          </div>
-          <span className="text-sm text-orange-200 mt-2">Change Banner Image <span className="text-xs text-orange-300">(optional)</span></span>
-        </div>
-        {/* Username */}
+  );
+
+  // Step content
+  const renderStep = () => {
+    switch (step) {
+      case 0:
+        return (
+          <>
+            <h3 className="text-xl font-semibold mb-4 mt-2 border-b border-cyan-800 pb-2">Account Details</h3>
+            {/* Username, Email, Password, Confirm Password fields with validation and password strength meter */}
         <div className="mb-4">
           <label className="block mb-1 font-semibold" htmlFor="username">
             Username
@@ -317,16 +316,29 @@ setMessage('Server error.');
             id="username"
             value={form.username}
             onChange={handleChange}
-            className={`block w-full p-3 rounded-lg border ${usernameTaken ? 'border-red-500' : 'border-gray-300'} bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400`}
+            className={`block w-full p-3 rounded-lg border ${usernameTaken ? 'border-red-500' : 'border-white/20'} bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400`}
             required
           />
           {usernameTaken && (
             <p className="text-red-400 text-sm mt-1">This username is already taken.</p>
           )}
+              <p className="text-cyan-300 text-xs mt-1">Usernames are always lowercase and cannot contain spaces.</p>
+            </div>
+            <div className="mb-4">
+              <label className="block mb-1 font-semibold" htmlFor="email">
+                Email
+              </label>
+              <input
+                type="email"
+                name="email"
+                id="email"
+                value={form.email}
+                onChange={handleChange}
+                className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
+                required
+              />
         </div>
-
-        {/* Password */}
-        <div className="mb-4 relative">
+            <div className="mb-4">
           <label className="block mb-1 font-semibold" htmlFor="password">
             Password
           </label>
@@ -339,26 +351,46 @@ setMessage('Server error.');
               onChange={handleChange}
               onFocus={() => setShowPasswordChecklist(true)}
               onBlur={() => setShowPasswordChecklist(false)}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400 pr-10"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400 pr-10"
               required
+                  autoComplete="new-password"
+                  placeholder="Create a password"
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-300"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-300"
               onClick={() => setShowPassword((prev) => !prev)}
               tabIndex={-1}
+                  aria-label={showPassword ? 'Hide password' : 'Show password'}
             >
               {showPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
+              {/* Password Strength Meter */}
+              <div className="mt-2 flex items-center gap-2">
+                <div className="flex-1 h-2 rounded bg-gray-700 overflow-hidden">
+                  <div
+                    className={`h-2 rounded transition-all duration-300 ${
+                      passwordStrength === 4 ? 'bg-green-500 w-full' :
+                      passwordStrength === 3 ? 'bg-yellow-400 w-3/4' :
+                      passwordStrength === 2 ? 'bg-orange-400 w-1/2' :
+                      passwordStrength === 1 ? 'bg-red-400 w-1/4' :
+                      'bg-gray-500 w-0'
+                    }`}
+                  />
+                </div>
+                <span className="text-xs text-cyan-200 ml-2">
+                  {passwordStrength === 4 ? 'Strong' : passwordStrength === 3 ? 'Good' : passwordStrength === 2 ? 'Weak' : 'Very Weak'}
+                </span>
+              </div>
           {showPasswordChecklist && (
-            <div className="mt-2 bg-gray-800 p-3 rounded-lg shadow text-sm">
-              <p className="mb-1 font-semibold">Password must have:</p>
+            <div className="mt-2 bg-white/10 backdrop-blur-sm p-3 rounded-lg shadow text-sm border border-white/20">
+              <p className="mb-1 font-semibold text-white">Password must have:</p>
               <ul>
                 {passwordRequirements.map((req, idx) => (
-                  <li key={idx} className="flex items-center">
+                  <li key={idx} className="flex items-center text-white">
                     <span
-                      className={`inline-block w-3 h-3 rounded-full mr-2 border-2 ${req.test(form.password) ? 'bg-orange-500 border-orange-500' : 'bg-gray-700 border-gray-500'}`}
+                      className={`inline-block w-3 h-3 rounded-full mr-2 border-2 ${req.test(form.password) ? 'bg-cyan-500 border-cyan-500' : 'bg-gray-700 border-gray-500'}`}
                     ></span>
                     {req.label}
                   </li>
@@ -367,9 +399,7 @@ setMessage('Server error.');
             </div>
           )}
         </div>
-
-        {/* Confirm Password */}
-        <div className="mb-4">
+            <div className="mb-8">
           <label className="block mb-1 font-semibold" htmlFor="confirmPassword">
             Confirm Password
           </label>
@@ -380,27 +410,85 @@ setMessage('Server error.');
               id="confirmPassword"
               value={form.confirmPassword}
               onChange={handleChange}
-              className={`block w-full p-3 rounded-lg border pr-10 bg-gray-800 text-orange-100 ${
+              className={`block w-full p-3 rounded-lg border pr-10 bg-white/10 backdrop-blur-sm text-white ${
                 form.confirmPassword
                   ? form.password === form.confirmPassword
                     ? 'border-green-500 focus:ring-green-400'
                     : 'border-red-500 focus:ring-red-400'
-                  : 'border-gray-300 focus:ring-blue-400'
+                  : 'border-white/20 focus:ring-cyan-400'
               }`}
               required
             />
             <button
               type="button"
-              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-orange-300"
+              className="absolute right-3 top-1/2 transform -translate-y-1/2 text-cyan-300"
               onClick={() => setShowConfirmPassword((prev) => !prev)}
               tabIndex={-1}
+                  aria-label={showConfirmPassword ? 'Hide password' : 'Show password'}
             >
               {showConfirmPassword ? <FaEyeSlash /> : <FaEye />}
             </button>
           </div>
         </div>
-
-        {/* Name */}
+          </>
+        );
+      case 1:
+        return (
+          <>
+            <h3 className="text-xl font-semibold mb-4 mt-2 border-b border-cyan-800 pb-2">Profile Details</h3>
+            {/* Profile photo, banner, name, art type, bio, optional fields */}
+            <div className="mb-4 flex flex-col items-center">
+              <div className="relative w-24 h-24">
+                {photoPreview || form.photoUrl ? (
+                  <img
+                    src={photoPreview || form.photoUrl}
+                    alt="Profile"
+                    className="w-24 h-24 rounded-full object-cover border-2 border-cyan-400 bg-gray-800"
+                  />
+                ) : (
+                  <div className="w-24 h-24 rounded-full flex items-center justify-center border-2 border-cyan-400 bg-gray-800">
+                    <FaCamera className="text-3xl text-cyan-300" aria-label="Add profile photo" />
+                  </div>
+                )}
+                <label className="absolute bottom-2 right-2 bg-black/60 rounded-full p-2 cursor-pointer">
+                  <input
+                    type="file"
+                    name="photoUrl"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'photo')}
+                    className="hidden"
+                  />
+                  <FaCamera className="text-white" />
+                </label>
+              </div>
+              <span className="text-sm text-cyan-200 mt-2">Change Profile Photo <span className="text-xs text-cyan-300">(JPG/PNG, 1:1, &lt;2MB)</span></span>
+            </div>
+            <div className="mb-8">
+              <div className="relative w-full h-32">
+                {bannerPreview || form.bannerUrl ? (
+                  <img
+                    src={bannerPreview || form.bannerUrl}
+                    alt="Banner"
+                    className="w-full h-32 object-cover rounded-lg border-2 border-cyan-400 bg-gray-800"
+                  />
+                ) : (
+                  <div className="w-full h-32 flex items-center justify-center rounded-lg border-2 border-cyan-400 bg-gray-800">
+                    <FaCamera className="text-3xl text-cyan-300" aria-label="Add banner image" />
+                  </div>
+                )}
+                <label className="absolute bottom-2 right-2 bg-black/60 rounded-full p-2 cursor-pointer">
+                  <input
+                    type="file"
+                    name="bannerUrl"
+                    accept="image/*"
+                    onChange={(e) => handleImageUpload(e, 'banner')}
+                    className="hidden"
+                  />
+                  <FaCamera className="text-white" />
+                </label>
+              </div>
+              <span className="text-sm text-cyan-200 mt-2">Change Banner Image <span className="text-xs text-cyan-300">(JPG/PNG, 4:1, &lt;2MB, optional)</span></span>
+            </div>
         <div className="mb-4">
           <label className="block mb-1 font-semibold" htmlFor="name">
             Name
@@ -411,28 +499,10 @@ setMessage('Server error.');
             id="name"
             value={form.name}
             onChange={handleChange}
-            className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+            className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
             required
           />
         </div>
-
-        {/* Email */}
-        <div className="mb-4">
-          <label className="block mb-1 font-semibold" htmlFor="email">
-            Email
-          </label>
-          <input
-            type="email"
-            name="email"
-            id="email"
-            value={form.email}
-            onChange={handleChange}
-            className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
-            required
-          />
-        </div>
-
-        {/* Art Type */}
         <div className="mb-4">
           <label className="block mb-1 font-semibold" htmlFor="artType">
             Art Type
@@ -442,7 +512,7 @@ setMessage('Server error.');
             id="artType"
             value={form.artType}
             onChange={handleChange}
-            className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+            className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
             required
           >
             <option value="">Select art type</option>
@@ -451,8 +521,6 @@ setMessage('Server error.');
             ))}
           </select>
         </div>
-
-        {/* Bio */}
         <div className="mb-4">
           <label className="block mb-1 font-semibold" htmlFor="bio">
             Bio
@@ -462,18 +530,17 @@ setMessage('Server error.');
             id="bio"
             value={form.bio}
             onChange={handleChange}
-            className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+            className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
             rows={3}
             placeholder="Tell us about yourself"
             required
           />
         </div>
-
         {/* Conditionally Rendered Optional Fields */}
         {getOptionalFields(form.artType).includes('stageName') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="stageName">
-              Stage Name <span className="text-xs text-orange-300">(optional)</span>
+              Stage Name <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -481,16 +548,15 @@ setMessage('Server error.');
               id="stageName"
               value={form.stageName}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder="e.g. Wizkid"
             />
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('genre') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="genre">
-              Genre <span className="text-xs text-orange-300">(optional)</span>
+              Genre <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -498,16 +564,16 @@ setMessage('Server error.');
               id="genre"
               value={form.genre}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder={GENRE_EXAMPLES}
               autoComplete="off"
             />
             {genreSuggestions.length > 0 && (
-              <ul className="bg-gray-900 border border-gray-700 rounded-lg mt-1 text-orange-100">
+              <ul className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg mt-1 text-white">
                 {genreSuggestions.map((g, idx) => (
                   <li
                     key={idx}
-                    className="px-3 py-1 cursor-pointer hover:bg-orange-700"
+                    className="px-3 py-1 cursor-pointer hover:bg-cyan-700"
                     onClick={() => setForm({ ...form, genre: g })}
                   >
                     {g}
@@ -517,11 +583,10 @@ setMessage('Server error.');
             )}
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('producerTag') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="producerTag">
-              Producer Tag <span className="text-xs text-orange-300">(optional)</span>
+              Producer Tag <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -529,16 +594,15 @@ setMessage('Server error.');
               id="producerTag"
               value={form.producerTag}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder="e.g. It's XYZ on the beat"
             />
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('engineerTag') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="engineerTag">
-              Engineer Tag <span className="text-xs text-orange-300">(optional)</span>
+              Engineer Tag <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -546,16 +610,15 @@ setMessage('Server error.');
               id="engineerTag"
               value={form.engineerTag}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder="e.g. Mixed by XYZ"
             />
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('directedBy') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="directedBy">
-              Directed By <span className="text-xs text-orange-300">(optional)</span>
+              Directed By <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -563,16 +626,15 @@ setMessage('Server error.');
               id="directedBy"
               value={form.directedBy}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder="e.g. Directed by XYZ"
             />
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('designerStyle') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="designerStyle">
-              Style <span className="text-xs text-orange-300">(optional)</span>
+              Style <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -580,16 +642,16 @@ setMessage('Server error.');
               id="designerStyle"
               value={form.designerStyle}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder={DESIGN_STYLE_EXAMPLES}
               autoComplete="off"
             />
             {designerStyleSuggestions.length > 0 && (
-              <ul className="bg-gray-900 border border-gray-700 rounded-lg mt-1 text-orange-100">
+              <ul className="bg-white/10 backdrop-blur-sm border border-white/20 rounded-lg mt-1 text-white">
                 {designerStyleSuggestions.map((s, idx) => (
                   <li
                     key={idx}
-                    className="px-3 py-1 cursor-pointer hover:bg-orange-700"
+                    className="px-3 py-1 cursor-pointer hover:bg-cyan-700"
                     onClick={() => setForm({ ...form, designerStyle: s })}
                   >
                     {s}
@@ -599,11 +661,10 @@ setMessage('Server error.');
             )}
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('skitmakerName') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="skitmakerName">
-              Skitmaker Name <span className="text-xs text-orange-300">(optional)</span>
+              Skitmaker Name <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -611,16 +672,15 @@ setMessage('Server error.');
               id="skitmakerName"
               value={form.skitmakerName}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder="e.g. Mr. Macaroni"
             />
           </div>
         )}
-
         {getOptionalFields(form.artType).includes('vixenName') && (
           <div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="vixenName">
-              Vixen Name <span className="text-xs text-orange-300">(optional)</span>
+              Vixen Name <span className="text-xs text-cyan-300">(optional)</span>
             </label>
             <input
               type="text"
@@ -628,18 +688,18 @@ setMessage('Server error.');
               id="vixenName"
               value={form.vixenName}
               onChange={handleChange}
-              className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+              className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
               placeholder="e.g. Vixen Queen"
             />
           </div>
         )}
-
-        {form.artType && (
-<div className="mb-4">
-<label className="block mb-1 font-semibold">
-Showcase Your Work
-</label>
-<p className="text-orange-200 text-sm mb-2">
+          </>
+        );
+      case 2:
+        return (
+          <>
+            <h3 className="text-xl font-semibold mb-4 mt-2 border-b border-cyan-800 pb-2">Showcase Your Work</h3>
+<p className="text-cyan-200 text-sm mb-2">
 Add links to your works on any of these platforms. If your platform is not listed, use the "Other Platform" option below.
 </p>
 {/* Platform checkboxes */}
@@ -648,7 +708,7 @@ Add links to your works on any of these platforms. If your platform is not liste
 ...getShowcasePlatforms(form.artType),
 'otherPlatform'
 ].map((platform) => (
-<label key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer shadow bg-gray-800 text-gray-200">
+<label key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer shadow bg-white/10 backdrop-blur-sm text-white border border-white/20">
           <input
   type="checkbox"
   checked={form.showcase[`${platform}Checked`] || false}
@@ -663,7 +723,7 @@ Add links to your works on any of these platforms. If your platform is not liste
       return { ...prev, showcase };
     });
   }}
-  className="accent-orange-500 w-5 h-5"
+  className="accent-cyan-500 w-5 h-5"
 />
 {platform === 'otherPlatform'
 ? <FaLink className="inline text-blue-500 mr-1" />
@@ -712,7 +772,7 @@ Add links to your works on any of these platforms. If your platform is not liste
       e.target.value
     )
   }
-  className="block w-full p-3 rounded-lg border border-gray-300 bg-gray-800 text-orange-100 focus:ring-2 focus:ring-orange-400"
+  className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
   required
 />
               {idx > 0 && (
@@ -733,7 +793,7 @@ Add links to your works on any of these platforms. If your platform is not liste
         <button
           type="button"
           onClick={() => handleAddShowcase(platform)}
-          className="text-orange-400 hover:text-orange-600 text-sm font-semibold"
+          className="text-cyan-400 hover:text-cyan-600 text-sm font-semibold"
         >
           + Add another link
         </button>
@@ -746,30 +806,97 @@ Add links to your works on any of these platforms. If your platform is not liste
         );
         // Only show divider if this is not the last checked platform
         return checkedPlatforms[checkedPlatforms.length - 1] !== platform ? (
-          <div className="my-4 border-t border-orange-800 opacity-40 w-2/3 mx-auto" />
+          <div className="my-4 border-t border-cyan-800 opacity-40 w-2/3 mx-auto" />
         ) : null;
       })()}
     </div>
   ) : null
 )}
+          </>
+        );
+      case 3:
+        return (
+          <>
+            <h3 className="text-xl font-semibold mb-4 mt-2 border-b border-cyan-800 pb-2">Confirmation</h3>
+            <div className="bg-white/10 p-4 rounded-lg mb-4 text-cyan-100">
+              <p className="mb-2">Please review your information before submitting:</p>
+              <ul className="text-sm space-y-1">
+                <li><b>Username:</b> {form.username}</li>
+                <li><b>Email:</b> {form.email}</li>
+                <li><b>Name:</b> {form.name}</li>
+                <li><b>Art Type:</b> {toSentenceCase(form.artType)}</li>
+                <li><b>Bio:</b> {form.bio}</li>
+                {/* Add more summary fields as needed */}
+              </ul>
                 </div>
-            )}
+          </>
+        );
+      default:
+        return null;
+    }
+  };
 
-        {/* Submit Button */}
+  // Navigation buttons
+  const renderNav = () => (
+    <div className="flex justify-between mt-8 gap-4">
+      {step > 0 && (
+        <button type="button" className="px-6 py-2 rounded-lg bg-gray-700 hover:bg-gray-800 text-white font-semibold" onClick={() => setStep(step - 1)}>
+          <FaChevronLeft className="inline mr-2" /> Back
+        </button>
+      )}
+      {step < STEPS.length - 1 && (
+        <button
+          type="button"
+          className="ml-auto px-6 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold"
+          onClick={() => setStep(step + 1)}
+          disabled={
+            (step === 0 && !isAccountStepValid) ||
+            (step === 1 && !isProfileStepValid) ||
+            (step === 2 && !isShowcaseStepValid)
+          }
+        >
+          Next <FaChevronRight className="inline ml-2" />
+        </button>
+      )}
+      {step === STEPS.length - 1 && (
           <button
             type="submit"
-          className="w-full py-3 rounded-lg bg-orange-600 hover:bg-orange-700 text-white font-bold text-lg transition"
+          className="ml-auto px-6 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold flex items-center gap-2"
+          disabled={submitting}
           >
+          {submitting && <span className="loader border-2 border-white border-t-cyan-400 rounded-full w-5 h-5 animate-spin"></span>}
             Create Profile
           </button>
+      )}
+    </div>
+  );
 
-        {/* Message */}
+  return (
+    <>
+      <Header />
+      <div className="min-h-screen bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900 flex items-center justify-center bg-fixed px-2 sm:px-0 py-12">
+        <form
+          onSubmit={handleSubmit}
+          autoComplete="off"
+          className="w-full max-w-3xl mx-auto p-4 sm:p-8 bg-white/10 backdrop-blur-sm rounded-2xl shadow-lg text-white border border-white/20"
+        >
+          <h2 className="text-3xl font-bold mb-2 text-center">Create Your Profile</h2>
+          <p className="text-cyan-200 text-center mb-8">Join Kloud 9 and showcase your creative talent to the world. Fill out the form below to get started.</p>
+          <Stepper />
+          {renderStep()}
+          {renderNav()}
         {message && (
-          <div className="mt-4 text-center font-semibold text-orange-300">
+          <div className="mt-4 text-center font-semibold text-cyan-300">
             {message}
           </div>
         )}
+          <div className="mt-8 text-center text-cyan-200 text-sm">
+            Already have an account?{' '}
+            <Link href="/login" className="text-cyan-300 font-semibold hover:underline focus:outline-none focus:underline">Sign in</Link>
+          </div>
         </form>
-    </div>
+      </div>
+      <Footer />
+    </>
   );
 }
