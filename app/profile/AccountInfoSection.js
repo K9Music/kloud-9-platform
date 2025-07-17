@@ -1,3 +1,4 @@
+"use client";
 import { useState, useMemo } from 'react';
 
 export default function AccountInfoSection({ initialUsername, initialName, artType, lastUsernameChange, usernameChangeCooldown, onSave }) {
