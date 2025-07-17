@@ -1,3 +1,4 @@
+"use client";
 import { useState } from 'react';
 import { useSearchParams, useRouter } from 'next/navigation';
 import Header from '../../components/Header';
