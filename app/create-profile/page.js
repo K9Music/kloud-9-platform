@@ -382,7 +382,7 @@ setMessage('Server error.');
                 <span className="text-xs text-cyan-200 ml-2">
                   {passwordStrength === 4 ? 'Strong' : passwordStrength === 3 ? 'Good' : passwordStrength === 2 ? 'Weak' : 'Very Weak'}
                 </span>
-              </div>
+          </div>
           {showPasswordChecklist && (
             <div className="mt-2 bg-white/10 backdrop-blur-sm p-3 rounded-lg shadow text-sm border border-white/20">
               <p className="mb-1 font-semibold text-white">Password must have:</p>
