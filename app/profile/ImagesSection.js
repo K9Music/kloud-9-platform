@@ -1,6 +1,7 @@
 "use client";
 import { useState } from 'react';
 import { FaCamera } from 'react-icons/fa';
+import { uploadToCloudinary } from '../../lib/cloudinary';
 
 export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSave }) {
   const [photoUrl, setPhotoUrl] = useState(initialPhotoUrl || '');
@@ -14,18 +15,27 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
   const [originalPhotoUrl, setOriginalPhotoUrl] = useState(initialPhotoUrl || '');
   const [originalBannerUrl, setOriginalBannerUrl] = useState(initialBannerUrl || '');
 
-  const handleImageUpload = (e, type) => {
+  const handleImageUpload = async (e, type) => {
     const file = e.target.files[0];
     if (!file) return;
-    const reader = new FileReader();
-    reader.onloadend = () => {
+    try {
+      // Show a preview while uploading (optional)
+      const preview = URL.createObjectURL(file);
+      if (type === 'photo') setPhotoPreview(preview);
+      else setBannerPreview(preview);
+
+      // Upload to Cloudinary
+      const url = await uploadToCloudinary(file, type);
       if (type === 'photo') {
-        setPhotoPreview(reader.result);
+        setPhotoPreview(url);
+        setPhotoUrl(url);
       } else {
-        setBannerPreview(reader.result);
+        setBannerPreview(url);
+        setBannerUrl(url);
       }
-    };
-    reader.readAsDataURL(file);
+    } catch (err) {
+      setError('Image upload failed. Please try again.');
+    }
   };
 
   const handleSubmit = async (e) => {

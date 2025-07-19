@@ -4,6 +4,7 @@ import { FaSpotify, FaYoutube, FaSoundcloud, FaApple, FaMusic, FaLink, FaEye, Fa
 import Header from '../../components/Header';
 import Footer from '../../components/Footer';
 import Link from 'next/link';
+import { uploadToCloudinary } from '../../lib/cloudinary';
 // Simulated registered usernames (replace with API call in production)
 const REGISTERED_USERNAMES = ['john', 'jane', 'beatking', 'vixenchic'];
 const PLATFORM_ICONS = {
@@ -148,19 +149,26 @@ setStyleSuggestions([]);
 }, [form.style, form.designerStyle, form.artType]);
 // Image upload logic (simulate Cloudinary or use your own API)
 const handleImageUpload = async (e, type) => {
-const file = e.target.files[0];
-if (!file) return;
-const reader = new FileReader();
-reader.onloadend = () => {
-if (type === 'photo') {
-setPhotoPreview(reader.result);
-setForm((prev) => ({ ...prev, photoUrl: reader.result }));
-} else {
-setBannerPreview(reader.result);
-setForm((prev) => ({ ...prev, bannerUrl: reader.result }));
-}
-};
-reader.readAsDataURL(file);
+  const file = e.target.files[0];
+  if (!file) return;
+  try {
+    // Show a preview while uploading (optional)
+    const preview = URL.createObjectURL(file);
+    if (type === 'photo') setPhotoPreview(preview);
+    else setBannerPreview(preview);
+
+    // Upload to Cloudinary
+    const url = await uploadToCloudinary(file, type);
+    if (type === 'photo') {
+      setPhotoPreview(url);
+      setForm((prev) => ({ ...prev, photoUrl: url }));
+    } else {
+      setBannerPreview(url);
+      setForm((prev) => ({ ...prev, bannerUrl: url }));
+    }
+  } catch (err) {
+    alert('Image upload failed. Please try again.');
+  }
 };
 const getOptionalFields = (artType) => {
 switch (artType) {
