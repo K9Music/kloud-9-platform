@@ -1,5 +1,6 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { sanitizeObject, isValidProfileInput } from '../../../../lib/validation';
 
 const prisma = new PrismaClient();
 
@@ -7,7 +8,11 @@ export async function PATCH(req, context) {
   const { params } = await context;
   try {
     const id = parseInt(params.id, 10);
-    const data = await req.json();
+    let data = await req.json();
+    data = sanitizeObject(data); // Sanitize all string fields
+    if (!isValidProfileInput(data)) {
+      return new Response(JSON.stringify({ error: 'Invalid input.' }), { status: 400 });
+    }
     // Only allow editable fields
     const update = {};
     // Username change logic

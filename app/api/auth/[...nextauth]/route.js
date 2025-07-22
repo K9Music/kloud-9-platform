@@ -28,7 +28,7 @@ const handler = NextAuth({
         } else {
           user = await prisma.profile.findUnique({
             where: { username: input.toLowerCase() },
-          });
+        });
         }
         if (!user) return null;
         // Compare password

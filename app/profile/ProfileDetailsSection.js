@@ -1,4 +1,5 @@
 import { useState } from 'react';
+import { FaInfoCircle } from 'react-icons/fa';
 
 // Helper to determine which fields to show for each art type
 const getOptionalFields = (artType) => {
@@ -153,7 +154,14 @@ export default function ProfileDetailsSection({
       {optionalFields.map((key) => (
         <div className="mb-4" key={key}>
           <label className="block mb-1 font-semibold text-cyan-300">
-            {FIELD_LABELS[key]} <span className="text-xs text-cyan-400">(optional)</span>
+            {FIELD_LABELS[key]}
+            <span className="ml-1 cursor-pointer group relative align-middle">
+              <FaInfoCircle className="inline text-cyan-400" aria-label="More info about stage name" tabIndex={0} />
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 w-48 bg-slate-800 text-cyan-100 text-xs rounded shadow-lg px-3 py-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition pointer-events-none z-10">
+                This is the name you perform under. Optional.
+              </span>
+            </span>
+            <span className="ml-2 text-xs text-cyan-400">(optional)</span>
           </label>
           <input
             type="text"

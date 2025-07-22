@@ -42,8 +42,7 @@ function toSentenceCase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export default async function PublicProfilePage(context) {
-  const { params } = await context;
+export default async function PublicProfilePage({ params }) {
   if (!params || !params.username) {
     return (
       <div className="min-h-screen flex flex-col">

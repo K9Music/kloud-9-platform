@@ -1,5 +1,5 @@
 "use client";
-import { useState, useMemo } from 'react';
+import { useState, useMemo, useEffect } from 'react';
 
 export default function AccountInfoSection({ initialUsername, initialName, artType, lastUsernameChange, usernameChangeCooldown, onSave }) {
   const [username, setUsername] = useState(initialUsername || '');
@@ -10,6 +10,9 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
   const [error, setError] = useState('');
   const [originalUsername, setOriginalUsername] = useState(initialUsername || '');
   const [originalName, setOriginalName] = useState(initialName || '');
+  const [usernameError, setUsernameError] = useState('');
+  const [showUsernameHelp, setShowUsernameHelp] = useState(false);
+  const [showNameHelp, setShowNameHelp] = useState(false);
 
   // Username change restriction logic
   const now = Date.now();
@@ -23,6 +26,22 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
     const date = new Date(lastChange + cooldown);
     return { days, date };
   }, [canChangeUsername, lastChange, cooldown, now]);
+
+  const USERNAME_MIN_LENGTH = 3;
+  const USERNAME_MAX_LENGTH = 30;
+  const USERNAME_REGEX = /^[a-z0-9_]+$/; // Only lowercase letters, numbers, underscores
+
+  const getUsernameValidationError = (username) => {
+    if (!username) return 'Username is required.';
+    if (username.length < USERNAME_MIN_LENGTH) return `Username must be at least ${USERNAME_MIN_LENGTH} characters.`;
+    if (username.length > USERNAME_MAX_LENGTH) return `Username cannot exceed ${USERNAME_MAX_LENGTH} characters.`;
+    if (!USERNAME_REGEX.test(username)) return 'Usernames can only contain lowercase letters, numbers, and underscores (_). No spaces or dashes.';
+    return '';
+  };
+
+  useEffect(() => {
+    setUsernameError(getUsernameValidationError(username));
+  }, [username]);
 
   const handleSubmit = async (e) => {
     e.preventDefault();
@@ -70,7 +89,6 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
           <div className="text-xs text-cyan-300 mb-2 italic mt-3">
             You can change your username once every 90 days. Changing your username will also update your public profile link (e.g., <span className="font-mono">k9music.com/profile/&lt;new-username&gt;</span>).
           </div>
-          <div className="text-cyan-400 text-xs mt-1">Usernames are always lowercase and cannot contain spaces.</div>
           {!canChangeUsername && nextChangeDate && (
             <div className="text-xs text-cyan-300 mt-1 italic">
               You can change your username again in {nextChangeDate.days} day{nextChangeDate.days !== 1 ? 's' : ''} (on {nextChangeDate.date.toLocaleDateString()}).
@@ -105,12 +123,22 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
         <input
           type="text"
           value={username}
-          onChange={e => setUsername(e.target.value.toLowerCase())}
-          className={`block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400 ${!canChangeUsername ? 'opacity-60 cursor-not-allowed' : ''}`}
+          onChange={e => { setUsername(e.target.value.toLowerCase()); setUsernameError(getUsernameValidationError(e.target.value.toLowerCase())); }}
+          onFocus={() => setShowUsernameHelp(true)}
+          onBlur={() => setShowUsernameHelp(false)}
+          className={`block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400 ${!canChangeUsername ? 'opacity-60 cursor-not-allowed' : ''} ${usernameError ? 'border-red-500' : ''}`}
           autoComplete="off"
           disabled={!canChangeUsername}
+          aria-describedby="username-instructions username-error"
         />
-        <div className="text-cyan-400 text-xs mt-1">Usernames are always lowercase and cannot contain spaces.</div>
+        {showUsernameHelp && (
+          <div id="username-instructions" className="text-cyan-400 text-xs mt-1">
+            Usernames must be 3–30 characters. Only lowercase letters, numbers, and underscores (_) are allowed. No spaces or dashes.
+          </div>
+        )}
+        {usernameError && (
+          <p id="username-error" className="text-red-400 text-sm mt-1">{usernameError}</p>
+        )}
         {!canChangeUsername && nextChangeDate && (
           <div className="text-xs text-cyan-300 mt-1">
             You can change your username again in {nextChangeDate.days} day{nextChangeDate.days !== 1 ? 's' : ''} (on {nextChangeDate.date.toLocaleDateString()}).
@@ -123,9 +151,17 @@ export default function AccountInfoSection({ initialUsername, initialName, artTy
           type="text"
           value={name}
           onChange={e => setName(e.target.value)}
+          onFocus={() => setShowNameHelp(true)}
+          onBlur={() => setShowNameHelp(false)}
           className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400"
           autoComplete="off"
+          aria-describedby="name-instructions"
         />
+        {showNameHelp && (
+          <div id="name-instructions" className="text-cyan-400 text-xs mt-1">
+            Enter your full name.
+          </div>
+        )}
       </div>
       <div className="flex gap-2">
         <button

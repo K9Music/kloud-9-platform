@@ -43,11 +43,32 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
   const [message, setMessage] = useState('');
   const [error, setError] = useState('');
   const [originalShowcase, setOriginalShowcase] = useState(initialShowcase);
+  const [showcaseErrors, setShowcaseErrors] = useState({});
+
+  const validateShowcaseUrl = (url) => {
+    if (!url) return '';
+    try {
+      new URL(url);
+      return '';
+    } catch {
+      return 'Please enter a valid URL (including https://)';
+    }
+  };
 
   const handleShowcaseChange = (platform, idx, value) => {
     setShowcase((prev) => ({
       ...prev,
       [`${platform}${idx > 0 ? idx + 1 : ''}`]: value,
+    }));
+    setShowcaseErrors((prev) => ({
+      ...prev,
+      [`${platform}${idx > 0 ? idx + 1 : ''}`]: validateShowcaseUrl(value),
+    }));
+  };
+  const handleShowcaseBlur = (platform, idx, value) => {
+    setShowcaseErrors((prev) => ({
+      ...prev,
+      [`${platform}${idx > 0 ? idx + 1 : ''}`]: validateShowcaseUrl(value),
     }));
   };
   const handleRemoveShowcase = (platform, idx) => {
@@ -182,7 +203,7 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
       {[
         ...getShowcasePlatforms(artType),
         'otherPlatform',
-      ].map((platform) =>
+      ].map((platform, i, arr) =>
         showcase[`${platform}Checked`] ? (
           <div key={platform} className="mb-2">
             <div className="flex items-center gap-2 mb-1">
@@ -210,10 +231,14 @@ export default function ShowcaseSection({ initialShowcase = {}, artType, onSave 
                       value={showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] !== undefined
                         ? showcase[`${platform}${idx > 0 ? idx + 1 : ''}`]
                         : showcase[platform] || ''}
-                      onChange={e => handleShowcaseChange(platform, idx, e.target.value)}
-                      className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400"
+                      onChange={(e) => handleShowcaseChange(platform, idx, e.target.value)}
+                      onBlur={(e) => handleShowcaseBlur(platform, idx, e.target.value)}
+                      className={`block w-full p-3 rounded-lg border ${showcaseErrors[`${platform}${idx > 0 ? idx + 1 : ''}`] ? 'border-red-500' : 'border-white/20'} bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400`}
                       required
                     />
+                    {showcaseErrors[`${platform}${idx > 0 ? idx + 1 : ''}`] && (
+                      <span className="text-red-400 text-xs ml-2">{showcaseErrors[`${platform}${idx > 0 ? idx + 1 : ''}`]}</span>
+                    )}
                     {idx > 0 && (
                       <button
                         type="button"

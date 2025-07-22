@@ -192,92 +192,92 @@ export default function ProfilePage() {
       <Header />
       <div className="flex-1 flex items-center justify-center py-12">
         <div className="w-full max-w-5xl p-8 glassmorphism rounded-2xl shadow-xl text-cyan-100 relative border border-white/10">
-          <a
-            href={`/profile/${profile.username}`}
-            target="_blank"
-            rel="noopener noreferrer"
+        <a
+          href={`/profile/${profile.username}`}
+          target="_blank"
+          rel="noopener noreferrer"
             className="absolute right-8 top-8 px-4 py-2 bg-cyan-600 text-white rounded hover:bg-cyan-700 text-sm font-semibold shadow"
-          >
-            View Public Profile
-          </a>
-          <h2 className="text-2xl font-bold mb-6 text-center">My Profile</h2>
-          {/* Non-editable fields */}
+        >
+          View Public Profile
+        </a>
+        <h2 className="text-2xl font-bold mb-6 text-center">My Profile</h2>
+        {/* Non-editable fields */}
           <div className="mb-8 p-6 rounded-lg bg-slate-800 shadow">
             <div className="mb-4 text-cyan-300 text-xs italic">
-              <strong>Email or art type changes:</strong><br />
-              For security reasons, these fields can only be updated by our support team.<br />
-              <a
-                href="mailto:support@k9music.com"
+            <strong>Email or art type changes:</strong><br />
+            For security reasons, these fields can only be updated by our support team.<br />
+            <a
+              href="mailto:support@k9music.com"
                 className="underline text-cyan-200 hover:text-cyan-400"
-                target="_blank"
-                rel="noopener noreferrer"
-              >
-                Contact support
-              </a> to request a change.
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1 font-semibold">Email</label>
-              <input
-                type="text"
-                value={profile.email || ''}
-                disabled
-                className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-300 opacity-60 cursor-not-allowed"
-                readOnly
-              />
-            </div>
-            <div className="mb-4">
-              <label className="block mb-1 font-semibold">Art Type</label>
-              <input
-                type="text"
-                value={toSentenceCase(profile.artType) || ''}
-                disabled
-                className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-300 opacity-60 cursor-not-allowed"
-                readOnly
-              />
-            </div>
+              target="_blank"
+              rel="noopener noreferrer"
+            >
+              Contact support
+            </a> to request a change.
           </div>
-          {/* Reordered sections to match public profile layout */}
-          <ImagesSection
-            initialPhotoUrl={profile.photoUrl}
-            initialBannerUrl={profile.bannerUrl}
-            onSave={handleImagesSave}
-          />
-          <AccountInfoSection
-            initialUsername={profile.username}
-            initialName={profile.name}
-            artType={profile.artType}
-            lastUsernameChange={profile.lastUsernameChange}
-            usernameChangeCooldown={profile.usernameChangeCooldown}
-            onSave={handleAccountInfoSave}
-          />
-          <ProfileDetailsSection
-            artType={profile.artType}
-            genre={profile.genre}
-            stageName={profile.stageName}
-            producerTag={profile.producerTag}
-            engineerTag={profile.engineerTag}
-            directedBy={profile.directedBy}
-            designerStyle={profile.designerStyle}
-            skitmakerName={profile.skitmakerName}
-            vixenName={profile.vixenName}
-            onSave={async (fields) => {
-              const res = await fetch(`/api/profiles/${profile.id}`, {
-                method: 'PATCH',
-                headers: { 'Content-Type': 'application/json' },
-                body: JSON.stringify(fields),
-              });
-              if (!res.ok) throw new Error('Failed to update profile details.');
-              setProfile((prev) => ({ ...prev, ...fields }));
-            }}
-          />
-          <BioSection initialBio={profile.bio} onSave={handleBioSave} />
-          <ShowcaseSection
-            initialShowcase={profile.showcase}
-            artType={profile.artType}
-            onSave={handleShowcaseSave}
-          />
-          <PasswordSection onSave={handlePasswordSave} />
+          <div className="mb-4">
+            <label className="block mb-1 font-semibold">Email</label>
+            <input
+              type="text"
+              value={profile.email || ''}
+              disabled
+                className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-300 opacity-60 cursor-not-allowed"
+              readOnly
+            />
+          </div>
+          <div className="mb-4">
+            <label className="block mb-1 font-semibold">Art Type</label>
+            <input
+              type="text"
+                value={toSentenceCase(profile.artType) || ''}
+              disabled
+                className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-300 opacity-60 cursor-not-allowed"
+              readOnly
+            />
+          </div>
         </div>
+        {/* Reordered sections to match public profile layout */}
+        <ImagesSection
+          initialPhotoUrl={profile.photoUrl}
+          initialBannerUrl={profile.bannerUrl}
+          onSave={handleImagesSave}
+        />
+        <AccountInfoSection
+          initialUsername={profile.username}
+          initialName={profile.name}
+          artType={profile.artType}
+          lastUsernameChange={profile.lastUsernameChange}
+          usernameChangeCooldown={profile.usernameChangeCooldown}
+          onSave={handleAccountInfoSave}
+        />
+        <ProfileDetailsSection
+          artType={profile.artType}
+          genre={profile.genre}
+          stageName={profile.stageName}
+          producerTag={profile.producerTag}
+          engineerTag={profile.engineerTag}
+          directedBy={profile.directedBy}
+          designerStyle={profile.designerStyle}
+          skitmakerName={profile.skitmakerName}
+          vixenName={profile.vixenName}
+          onSave={async (fields) => {
+            const res = await fetch(`/api/profiles/${profile.id}`, {
+              method: 'PATCH',
+              headers: { 'Content-Type': 'application/json' },
+              body: JSON.stringify(fields),
+            });
+            if (!res.ok) throw new Error('Failed to update profile details.');
+            setProfile((prev) => ({ ...prev, ...fields }));
+          }}
+        />
+        <BioSection initialBio={profile.bio} onSave={handleBioSave} />
+        <ShowcaseSection
+          initialShowcase={profile.showcase}
+          artType={profile.artType}
+          onSave={handleShowcaseSave}
+        />
+        <PasswordSection onSave={handlePasswordSave} />
+      </div>
       </div>
       <Footer />
     </div>

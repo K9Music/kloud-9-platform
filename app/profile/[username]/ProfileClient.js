@@ -3,7 +3,7 @@ import { useState, useEffect, useRef } from 'react';
 import BioSection from './BioSection';
 import ShowcaseEmbed from './ShowcaseEmbed';
 import Link from "next/link";
-import { FaStar, FaPalette, FaFacebook, FaLinkedin } from 'react-icons/fa';
+import { FaStar, FaPalette, FaFacebook, FaLinkedin, FaLink } from 'react-icons/fa';
 import { SiX, SiThreads } from 'react-icons/si';
 import { Cinzel } from "next/font/google";
 import Header from '../../../components/Header';
@@ -12,7 +12,10 @@ const cinzel = Cinzel({ subsets: ["latin"], weight: ["700"] });
 
 function toSentenceCase(str) {
   if (!str) return '';
-  return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
+  return str
+    .split(' ')
+    .map(word => word.charAt(0).toUpperCase() + word.slice(1).toLowerCase())
+    .join(' ');
 }
 
 export default function ProfileClient({ profile, platformIcons }) {
@@ -79,8 +82,12 @@ export default function ProfileClient({ profile, platformIcons }) {
               <img src={profile.bannerUrl} alt="Banner" className="w-full h-40 object-cover rounded-2xl mb-4 border border-cyan-900" />
           )}
           {profile.photoUrl && (
-              <img src={profile.photoUrl} alt="Profile" className="w-32 h-32 rounded-full object-cover border-4 border-cyan-400 -mt-16 mb-2 bg-slate-900" />
-            )}
+  <img
+    src={profile.photoUrl}
+    alt="Profile"
+    className={`w-32 h-32 rounded-full object-cover border-4 border-cyan-400 mb-2 bg-slate-900 ${profile.bannerUrl ? '-mt-16' : 'mt-4'}`}
+  />
+)}
             <h2 className="text-4xl font-extrabold mt-2 mb-1 text-white tracking-tight text-center drop-shadow-lg">{profile.stageName || profile.name}</h2>
             <div className="text-cyan-300 text-lg mb-1 font-semibold">@{profile.username}</div>
             <div className="flex flex-wrap gap-2 justify-center mb-2">

@@ -1,7 +1,8 @@
 "use client";
 import { useState } from 'react';
-import { FaCamera } from 'react-icons/fa';
+import { FaCamera, FaInfoCircle } from 'react-icons/fa';
 import { uploadToCloudinary } from '../../lib/cloudinary';
+import { sanitizeObject, isValidProfileInput } from '../../lib/validation';
 
 export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSave }) {
   const [photoUrl, setPhotoUrl] = useState(initialPhotoUrl || '');
@@ -44,10 +45,17 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
     setMessage('');
     setError('');
     try {
-      await onSave({
+      // Sanitize and validate before saving
+      const data = sanitizeObject({
         photoUrl: photoPreview || photoUrl,
         bannerUrl: bannerPreview || bannerUrl,
       });
+      if (!isValidProfileInput(data)) {
+        setError('Invalid input. Please check your entries.');
+        setSaving(false);
+        return;
+      }
+      await onSave(data);
       setMessage('Images updated!');
       if (photoPreview) setPhotoUrl(photoPreview);
       if (bannerPreview) setBannerUrl(bannerPreview);
@@ -149,7 +157,15 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
               <FaCamera className="text-white" />
             </label>
           </div>
-          <span className="text-sm text-cyan-200">Change Profile Photo</span>
+          <span className="text-sm text-cyan-200 mt-2 flex items-center gap-1">
+            Change Profile Photo
+            <span className="ml-1 cursor-pointer group relative align-middle">
+              <FaInfoCircle className="inline text-cyan-400" aria-label="Profile photo requirements" tabIndex={0} />
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 w-56 bg-slate-800 text-cyan-100 text-xs rounded shadow-lg px-3 py-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition pointer-events-none z-10">
+                JPG or PNG, 1:1 aspect ratio, max 2MB.
+              </span>
+            </span>
+          </span>
         </div>
         <div className="flex flex-col items-center flex-1">
           <div className="relative w-full h-32 mb-2">
@@ -174,7 +190,15 @@ export default function ImagesSection({ initialPhotoUrl, initialBannerUrl, onSav
               <FaCamera className="text-white" />
             </label>
           </div>
-          <span className="text-sm text-cyan-200">Change Banner Image <span className="text-xs text-cyan-300">(optional)</span></span>
+          <span className="text-sm text-cyan-200 mt-2 flex items-center gap-1">
+            Change Banner Image <span className="ml-2 text-xs text-cyan-300">(optional)</span>
+            <span className="ml-1 cursor-pointer group relative align-middle">
+              <FaInfoCircle className="inline text-cyan-400" aria-label="Banner image requirements" tabIndex={0} />
+              <span className="absolute left-6 top-1/2 -translate-y-1/2 w-56 bg-slate-800 text-cyan-100 text-xs rounded shadow-lg px-3 py-2 opacity-0 group-hover:opacity-100 group-focus-within:opacity-100 transition pointer-events-none z-10">
+                JPG or PNG, 4:1 aspect ratio, max 2MB.
+              </span>
+            </span>
+          </span>
         </div>
       </div>
       <div className="flex gap-2">

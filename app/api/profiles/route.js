@@ -1,11 +1,16 @@
 import { PrismaClient } from '@prisma/client';
 import bcrypt from 'bcryptjs';
+import { sanitizeObject, isValidProfileInput } from '../../../lib/validation';
 
 const prisma = new PrismaClient();
 
 export async function POST(req) {
   try {
-    const data = await req.json();
+    let data = await req.json();
+    data = sanitizeObject(data); // Sanitize all string fields
+    if (!isValidProfileInput(data)) {
+      return new Response(JSON.stringify({ error: 'Invalid input.' }), { status: 400 });
+    }
 
     // Basic validation (add more as needed)
     if (!data.username || !data.name || !data.email || !data.password) {
@@ -24,28 +29,13 @@ export async function POST(req) {
     // Save profile
     const profile = await prisma.profile.create({
       data: {
+        ...data,
         username: data.username.toLowerCase(),
-        name: data.name,
-        stageName: data.stageName,
-        genre: data.genre,
-        style: data.style,
-        bio: data.bio,
-        photoUrl: data.photoUrl,
-        bannerUrl: data.bannerUrl,
-        artType: data.artType,
-        showcase: data.showcase,
-        email: data.email,
-        password: hashedPassword, // Store hashed password
-        producerTag: data.producerTag,
-        engineerTag: data.engineerTag,
-        directedBy: data.directedBy,
-        designerStyle: data.designerStyle,
-        skitmakerName: data.skitmakerName,
-        vixenName: data.vixenName,
+        password: hashedPassword,
       },
     });
-
-    return new Response(JSON.stringify(profile), { status: 201 });
+    const { password, ...profileData } = profile;
+    return new Response(JSON.stringify(profileData), { status: 201 });
   } catch (err) {
     console.error('API error:', err);
     return new Response(JSON.stringify({ error: 'Server error.' }), { status: 500 });
