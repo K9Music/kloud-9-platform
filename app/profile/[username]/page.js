@@ -23,17 +23,30 @@ const platformIcons = {
   instagram: <FaInstagram className="inline mr-2 text-pink-600" />,
   portfolio: <FaLink className="inline mr-2 text-blue-400" />,
   vimeo: <FaVimeo className="inline mr-2 text-blue-300" />,
-  imdb: <FaImdb className="inline mr-2 text-yellow-500" />,
+  imdb: <FaImdb className="inline mr-2 text-blue-400" />,
 };
 
 async function getProfile(username) {
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   try {
-    const res = await fetch(`${baseUrl}/api/profiles?username=${username}`, { cache: 'no-store' });
-    if (!res.ok) return null;
-    return res.json();
+    console.log('Fetching profile for username:', username);
+    const res = await fetch(`${baseUrl}/api/profiles?username=${encodeURIComponent(username)}`, { 
+      cache: 'no-store',
+      headers: {
+        'Content-Type': 'application/json',
+      }
+    });
+    console.log('Response status:', res.status);
+    if (!res.ok) {
+      console.error('Response not ok:', res.status, res.statusText);
+      return null;
+    }
+    const data = await res.json();
+    console.log('Profile data:', data);
+    return data;
   } catch (err) {
-  return null;
+    console.error('Error fetching profile:', err);
+    return null;
   }
 }
 
@@ -55,6 +68,7 @@ export default async function PublicProfilePage({ params }) {
     );
   }
   const { username } = params;
+  console.log('Params username:', username);
   const profile = await getProfile(username);
   if (!profile) {
     return (

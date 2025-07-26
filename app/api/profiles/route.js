@@ -46,12 +46,12 @@ export async function GET(req) {
     if (email) {
       profile = await Profile.findOne({ email });
     } else if (username) {
-      profile = await Profile.findOne({ username });
+      profile = await Profile.findOne({ username: username.toLowerCase() });
     } else {
       return new Response(JSON.stringify({ error: 'Missing email or username parameter.' }), { status: 400 });
     }
     if (!profile) {
-      return new Response(JSON.stringify(null), { status: 404 });
+      return new Response(JSON.stringify(null), { status: 200 });
     }
     const profileData = profile.toObject();
     delete profileData.password;
