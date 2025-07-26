@@ -27,10 +27,10 @@ const platformIcons = {
 };
 
 async function getProfile(username) {
-  const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   try {
     console.log('Page: Fetching profile for username:', username);
-    const res = await fetch(`${baseUrl}/api/profiles/username/${encodeURIComponent(username)}`, { 
+    // Use relative URL instead of absolute URL to avoid localhost issues on Vercel
+    const res = await fetch(`/api/profiles/username/${encodeURIComponent(username)}`, { 
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
