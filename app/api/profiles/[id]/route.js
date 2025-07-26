@@ -3,6 +3,34 @@ import Profile from '../../../../models/Profile.js';
 import bcrypt from 'bcryptjs';
 import { sanitizeObject, isValidProfileInput } from '../../../../lib/validation';
 
+export async function GET(req, context) {
+  await dbConnect();
+  const params = await context.params;
+  try {
+    const id = params.id;
+    let profile;
+    
+    // Check if it's a MongoDB ObjectId (24 character hex string)
+    if (/^[0-9a-fA-F]{24}$/.test(id)) {
+      profile = await Profile.findById(id);
+    } else {
+      // If not an ObjectId, treat as username
+      profile = await Profile.findOne({ username: id.toLowerCase() });
+    }
+    
+    if (!profile) {
+      return new Response(JSON.stringify(null), { status: 200 });
+    }
+    
+    const profileData = profile.toObject();
+    delete profileData.password;
+    return new Response(JSON.stringify(profileData), { status: 200 });
+  } catch (err) {
+    console.error('GET error:', err);
+    return new Response(JSON.stringify({ error: 'Server error.' }), { status: 500 });
+  }
+}
+
 export async function PATCH(req, context) {
   await dbConnect();
   const params = await context.params;

@@ -30,7 +30,7 @@ async function getProfile(username) {
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   try {
     console.log('Fetching profile for username:', username);
-    const res = await fetch(`${baseUrl}/api/profiles?username=${encodeURIComponent(username)}`, { 
+    const res = await fetch(`${baseUrl}/api/profiles/${encodeURIComponent(username)}`, { 
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
