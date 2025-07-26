@@ -8,6 +8,9 @@ import { FaPalette } from "react-icons/fa";
 import { Cinzel } from "next/font/google";
 import Header from '../../../components/Header';
 import Footer from '../../../components/Footer';
+import dbConnect from '../../../lib/mongodb.js';
+import Profile from '../../../models/Profile.js';
+
 const cinzel = Cinzel({ subsets: ["latin"], weight: ["700"] });
 
 const platformIcons = {
@@ -29,21 +32,19 @@ const platformIcons = {
 async function getProfile(username) {
   try {
     console.log('Page: Fetching profile for username:', username);
-    // Use relative URL instead of absolute URL to avoid localhost issues on Vercel
-    const res = await fetch(`/api/profiles/username/${encodeURIComponent(username)}`, { 
-      cache: 'no-store',
-      headers: {
-        'Content-Type': 'application/json',
-      }
-    });
-    console.log('Page: Response status:', res.status);
-    if (!res.ok) {
-      console.error('Page: Response not ok:', res.status, res.statusText);
+    await dbConnect();
+    
+    const profile = await Profile.findOne({ username: username.toLowerCase() });
+    
+    if (!profile) {
+      console.log('Page: Profile not found for username:', username);
       return null;
     }
-    const data = await res.json();
-    console.log('Page: Profile data:', data);
-    return data;
+    
+    const profileData = profile.toObject();
+    delete profileData.password;
+    console.log('Page: Profile found:', profileData.username);
+    return profileData;
   } catch (err) {
     console.error('Page: Error fetching profile:', err);
     return null;
