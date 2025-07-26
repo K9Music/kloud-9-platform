@@ -81,13 +81,12 @@ export default function ProfileClient({ profile, platformIcons }) {
           {profile.bannerUrl && (
               <img src={profile.bannerUrl} alt="Banner" className="w-full h-40 object-cover rounded-2xl mb-4 border border-cyan-900" />
           )}
-          {profile.photoUrl && (
-  <img
-    src={profile.photoUrl}
-    alt="Profile"
-    className={`w-32 h-32 rounded-full object-cover border-4 border-cyan-400 mb-2 bg-slate-900 ${profile.bannerUrl ? '-mt-16' : 'mt-4'}`}
-  />
-)}
+          <img
+            src={profile.photoUrl || '/default-profile.png'}
+            alt="Profile"
+            onError={e => { e.target.onerror = null; e.target.src = '/default-profile.png'; }}
+            className={`w-32 h-32 rounded-full object-cover border-4 border-cyan-400 mb-2 bg-slate-900 ${profile.bannerUrl ? '-mt-16' : 'mt-4'}`}
+          />
             <h2 className="text-4xl font-extrabold mt-2 mb-1 text-white tracking-tight text-center drop-shadow-lg">{profile.stageName || profile.name}</h2>
             <div className="text-cyan-300 text-lg mb-1 font-semibold">@{profile.username}</div>
             <div className="flex flex-wrap gap-2 justify-center mb-2">

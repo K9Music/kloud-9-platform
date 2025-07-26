@@ -1,18 +1,19 @@
-import { PrismaClient } from '@prisma/client';
+import dbConnect from '../../../../../lib/mongodb.js';
+import Profile from '../../../../../models/Profile.js';
 import bcrypt from 'bcryptjs';
 
-const prisma = new PrismaClient();
-
-export async function PATCH(req, { params }) {
+export async function PATCH(req, context) {
+  await dbConnect();
+  const params = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = params.id;
     const data = await req.json();
     const { currentPassword, newPassword } = data;
     if (!currentPassword || !newPassword) {
       return new Response(JSON.stringify({ error: 'Current and new password are required.' }), { status: 400 });
     }
     // Fetch user
-    const profile = await prisma.profile.findUnique({ where: { id } });
+    const profile = await Profile.findById(id);
     if (!profile) {
       return new Response(JSON.stringify({ error: 'Profile not found.' }), { status: 404 });
     }
@@ -23,7 +24,8 @@ export async function PATCH(req, { params }) {
     }
     // Hash and update new password
     const hashed = await bcrypt.hash(newPassword, 10);
-    await prisma.profile.update({ where: { id }, data: { password: hashed } });
+    profile.password = hashed;
+    await profile.save();
     return new Response(JSON.stringify({ success: true }), { status: 200 });
   } catch (err) {
     console.error('Password change error:', err);

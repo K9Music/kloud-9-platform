@@ -1,13 +1,13 @@
-import { PrismaClient } from '@prisma/client';
+import dbConnect from '../../../../lib/mongodb.js';
+import Profile from '../../../../models/Profile.js';
 import bcrypt from 'bcryptjs';
 import { sanitizeObject, isValidProfileInput } from '../../../../lib/validation';
 
-const prisma = new PrismaClient();
-
 export async function PATCH(req, context) {
-  const { params } = await context;
+  await dbConnect();
+  const params = await context.params;
   try {
-    const id = parseInt(params.id, 10);
+    const id = params.id;
     let data = await req.json();
     data = sanitizeObject(data); // Sanitize all string fields
     if (!isValidProfileInput(data)) {
@@ -15,14 +15,12 @@ export async function PATCH(req, context) {
     }
     // Only allow editable fields
     const update = {};
-    // Username change logic
     if (data.username !== undefined) {
       // Fetch current profile
-      const currentProfile = await prisma.profile.findUnique({ where: { id } });
+      const currentProfile = await Profile.findById(id);
       if (!currentProfile) {
         return new Response(JSON.stringify({ error: 'Profile not found.' }), { status: 404 });
       }
-      // Prevent changing to the same username
       if (data.username !== currentProfile.username) {
         // Enforce cooldown (default 90 days)
         const cooldown = currentProfile.usernameChangeCooldown || 90 * 24 * 60 * 60 * 1000;
@@ -32,7 +30,7 @@ export async function PATCH(req, context) {
           return new Response(JSON.stringify({ error: 'You cannot change your username yet.' }), { status: 403 });
         }
         // Check uniqueness
-        const existing = await prisma.profile.findUnique({ where: { username: data.username } });
+        const existing = await Profile.findOne({ username: data.username });
         if (existing) {
           return new Response(JSON.stringify({ error: 'Username already exists.' }), { status: 409 });
         }
@@ -54,11 +52,12 @@ export async function PATCH(req, context) {
     if (data.skitmakerName !== undefined) update.skitmakerName = data.skitmakerName;
     if (data.vixenName !== undefined) update.vixenName = data.vixenName;
     // Never allow email or artType changes here
-    const profile = await prisma.profile.update({
-      where: { id },
-      data: update,
-    });
-    const { password, ...profileData } = profile;
+    const profile = await Profile.findByIdAndUpdate(id, update, { new: true });
+    if (!profile) {
+      return new Response(JSON.stringify({ error: 'Profile not found.' }), { status: 404 });
+    }
+    const profileData = profile.toObject();
+    delete profileData.password;
     return new Response(JSON.stringify(profileData), { status: 200 });
   } catch (err) {
     console.error('PATCH error:', err);
