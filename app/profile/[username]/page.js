@@ -29,23 +29,23 @@ const platformIcons = {
 async function getProfile(username) {
   const baseUrl = process.env.NEXTAUTH_URL || 'http://localhost:3000';
   try {
-    console.log('Fetching profile for username:', username);
-    const res = await fetch(`${baseUrl}/api/profiles/${encodeURIComponent(username)}`, { 
+    console.log('Page: Fetching profile for username:', username);
+    const res = await fetch(`${baseUrl}/api/profiles/username/${encodeURIComponent(username)}`, { 
       cache: 'no-store',
       headers: {
         'Content-Type': 'application/json',
       }
     });
-    console.log('Response status:', res.status);
+    console.log('Page: Response status:', res.status);
     if (!res.ok) {
-      console.error('Response not ok:', res.status, res.statusText);
+      console.error('Page: Response not ok:', res.status, res.statusText);
       return null;
     }
     const data = await res.json();
-    console.log('Profile data:', data);
+    console.log('Page: Profile data:', data);
     return data;
   } catch (err) {
-    console.error('Error fetching profile:', err);
+    console.error('Page: Error fetching profile:', err);
     return null;
   }
 }
@@ -68,7 +68,7 @@ export default async function PublicProfilePage({ params }) {
     );
   }
   const { username } = params;
-  console.log('Params username:', username);
+  console.log('Page: Params username:', username);
   const profile = await getProfile(username);
   if (!profile) {
     return (
