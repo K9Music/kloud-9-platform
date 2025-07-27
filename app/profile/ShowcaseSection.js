@@ -18,6 +18,9 @@ const PLATFORM_ICONS = {
   dribbble: <FaLink className="inline text-blue-500 mr-1" />,
   imdb: <FaLink className="inline text-blue-500 mr-1" />,
   portfolio: <FaLink className="inline text-blue-500 mr-1" />,
+  pinterest: <FaLink className="inline text-red-600 mr-1" />,
+  '500px': <FaLink className="inline text-blue-500 mr-1" />,
+  flickr: <FaLink className="inline text-pink-500 mr-1" />,
 };
 const ART_TYPES = [
   { value: 'musician', label: 'Musician', showcases: ['spotify', 'appleMusic', 'youtube', 'soundcloud', 'audiomack', 'tiktok'] },
@@ -29,6 +32,7 @@ const ART_TYPES = [
   { value: 'movie director', label: 'Movie Director', showcases: ['imdb', 'youtube', 'vimeo', 'portfolio'] },
   { value: 'skitmaker', label: 'Skitmaker', showcases: ['youtube', 'tiktok', 'instagram'] },
   { value: 'video vixen', label: 'Video Vixen', showcases: ['youtube', 'tiktok', 'instagram'] },
+  { value: 'photographer', label: 'Photographer', showcases: ['instagram', 'pinterest', 'behance', 'portfolio', '500px', 'flickr'] },
   { value: 'other', label: 'Other', showcases: ['custom1', 'custom2', 'custom3'] },
 ];
 const getShowcasePlatforms = (artType) => {

@@ -295,6 +295,26 @@ return type ? type.showcases : [];
     }));
 };
 
+  const handleRemoveShowcase = (platform, idx) => {
+    setForm((prev) => {
+      const updated = { ...prev };
+      delete updated.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`];
+      return updated;
+    });
+  };
+
+  const handleAddShowcase = (platform) => {
+    setForm((prev) => {
+      const updated = { ...prev };
+      let count = 1;
+      while (updated.showcase[`${platform}${count > 1 ? count : ''}`]) {
+        count++;
+      }
+      updated.showcase[`${platform}${count > 1 ? count : ''}`] = '';
+      return updated;
+    });
+  };
+
 // Custom Links logic
 const handleCustomLinkChange = (idx, value) => {
   setForm((prev) => ({
