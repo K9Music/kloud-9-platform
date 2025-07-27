@@ -137,6 +137,9 @@ export default function ProfilesPage() {
                           {profile.stageName && (
                             <div className="text-xs text-cyan-400 mb-1 font-medium">Stage Name: <span className="font-normal">{profile.stageName}</span></div>
                           )}
+                          {profile.shotBy && (
+                            <div className="text-xs text-cyan-400 mb-1 font-medium">Shot By: <span className="font-normal">{profile.shotBy}</span></div>
+                          )}
                         </Link>
                       </div>
                     ))}

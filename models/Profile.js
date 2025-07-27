@@ -76,6 +76,10 @@ const ProfileSchema = new mongoose.Schema({
     type: String,
     default: ''
   },
+  shotBy: { 
+    type: String,
+    default: ''
+  },
   resetToken: { 
     type: String,
     default: null

@@ -99,6 +99,7 @@ export default function ProfileClient({ profile, platformIcons }) {
               {profile.designerStyle && <span className="px-3 py-1 rounded-full bg-cyan-900 text-cyan-200 text-sm font-semibold border border-cyan-700">Designer Style: {profile.designerStyle}</span>}
               {profile.skitmakerName && <span className="px-3 py-1 rounded-full bg-cyan-900 text-cyan-200 text-sm font-semibold border border-cyan-700">Skitmaker Name: {profile.skitmakerName}</span>}
               {profile.vixenName && <span className="px-3 py-1 rounded-full bg-cyan-900 text-cyan-200 text-sm font-semibold border border-cyan-700">Vixen Name: {profile.vixenName}</span>}
+              {profile.shotBy && <span className="px-3 py-1 rounded-full bg-cyan-900 text-cyan-200 text-sm font-semibold border border-cyan-700">Shot By: {profile.shotBy}</span>}
             </div>
         </div>
         {/* Rating Placeholder */}
