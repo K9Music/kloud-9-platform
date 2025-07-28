@@ -1,5 +1,5 @@
-import dbConnect from '../../../lib/mongodb.js';
-import Profile from '../../../models/Profile.js';
+import dbConnect from '../../../../lib/mongodb.js';
+import Profile from '../../../../models/Profile.js';
 
 export async function GET() {
   await dbConnect();
