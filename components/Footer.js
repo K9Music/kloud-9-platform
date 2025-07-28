@@ -52,7 +52,7 @@ export default function Footer() {
             <h3 className="text-white font-semibold mb-4">Support</h3>
             <div className="flex flex-col space-y-2 mb-6">
               <Link href="/faqs" className="text-gray-400 hover:text-white transition-colors duration-200">FAQs</Link>
-              <Link href="/help" className="text-gray-400 hover:text-white transition-colors duration-200">Help Center</Link>
+              <Link href="/help-center" className="text-gray-400 hover:text-white transition-colors duration-200">Help Center</Link>
               <Link href="/contact" className="text-gray-400 hover:text-white transition-colors duration-200">Contact Us</Link>
             </div>
             
