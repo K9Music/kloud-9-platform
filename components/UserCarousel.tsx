@@ -1,22 +1,74 @@
 "use client";
-import React from "react";
+import React, { useState, useEffect } from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
 import "swiper/css/effect-coverflow";
 import "swiper/css/pagination";
 
-const demoUsers = [
-  { id: 1, name: "Alice Johnson", artType: "Musician", location: "Lagos, Nigeria", img: "https://randomuser.me/api/portraits/women/44.jpg" },
-  { id: 2, name: "Bob Smith", artType: "Producer", location: "Nairobi, Kenya", img: "https://randomuser.me/api/portraits/men/45.jpg" },
-  { id: 3, name: "Carol Davis", artType: "Designer", location: "Accra, Ghana", img: "https://randomuser.me/api/portraits/women/46.jpg" },
-  { id: 4, name: "Dave Wilson", artType: "Director", location: "Cape Town, SA", img: "https://randomuser.me/api/portraits/men/47.jpg" },
-  { id: 5, name: "Eve Brown", artType: "Artist", location: "Addis Ababa, Ethiopia", img: "https://randomuser.me/api/portraits/women/48.jpg" },
-  { id: 6, name: "Frank Miller", artType: "Photographer", location: "Dar es Salaam, Tanzania", img: "https://randomuser.me/api/portraits/men/49.jpg" },
-  { id: 7, name: "Grace Taylor", artType: "Content Creator", location: "Kampala, Uganda", img: "https://randomuser.me/api/portraits/women/50.jpg" },
-];
+interface Creator {
+  id: string;
+  name: string;
+  displayName: string;
+  artType: string;
+  img: string;
+  username: string;
+}
 
 const UserCarousel: React.FC = () => {
+  const [creators, setCreators] = useState<Creator[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
+
+  useEffect(() => {
+    const fetchCreators = async () => {
+      try {
+        const response = await fetch('/api/creators/carousel');
+        if (!response.ok) {
+          throw new Error('Failed to fetch creators');
+        }
+        const data = await response.json();
+        setCreators(data);
+      } catch (err) {
+        console.error('Error fetching creators:', err);
+        setError('Failed to load creators');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchCreators();
+  }, []);
+
+  // Don't render carousel if no creators or loading
+  if (loading) {
+    return (
+      <div className="py-16">
+        <h2 className="text-2xl font-bold text-white text-center mb-6">Meet Some of Our Creators</h2>
+        <div className="text-center text-cyan-200">Loading creators...</div>
+      </div>
+    );
+  }
+
+  if (error || creators.length === 0) {
+    return (
+      <div className="py-16">
+        <h2 className="text-2xl font-bold text-white text-center mb-6">Meet Some of Our Creators</h2>
+        <div className="text-center text-cyan-200">
+          {error || 'No creators available yet. Be the first to join!'}
+        </div>
+      </div>
+    );
+  }
+
+  // Function to format art type for display
+  const formatArtType = (artType: string) => {
+    return artType
+      .split(' ')
+      .map(word => word.charAt(0).toUpperCase() + word.slice(1))
+      .join(' ');
+  };
+
   return (
     <div className="py-16">
       <h2 className="text-2xl font-bold text-white text-center mb-6">Meet Some of Our Creators</h2>
@@ -24,7 +76,7 @@ const UserCarousel: React.FC = () => {
         effect="coverflow"
         grabCursor={true}
         centeredSlides={true}
-        slidesPerView={3}
+        slidesPerView={creators.length >= 3 ? 3 : creators.length}
         coverflowEffect={{
           rotate: 50,
           stretch: 0,
@@ -34,24 +86,34 @@ const UserCarousel: React.FC = () => {
         }}
         pagination={{ clickable: true }}
         autoplay={{ delay: 4000, disableOnInteraction: false }}
-        loop={true}
+        loop={creators.length > 3}
         modules={[EffectCoverflow, Pagination, Autoplay]}
         className="max-w-5xl mx-auto"
         style={{ paddingBottom: "40px", paddingTop: "20px", paddingLeft: "40px", paddingRight: "40px", overflow: "visible" }}
       >
-        {demoUsers.map((user) => (
-          <SwiperSlide key={user.id}>
+        {creators.map((creator) => (
+          <SwiperSlide key={creator.id}>
             <div className="relative">
               <img
-                src={user.img}
-                alt={user.name}
+                src={creator.img}
+                alt={creator.name}
                 className="rounded-lg border-4 border-cyan-400 shadow-lg bg-white w-full h-full"
                 style={{ objectFit: "contain", padding: "8px" }}
+                onError={(e) => {
+                  const target = e.target as HTMLImageElement;
+                  target.src = '/default-avatar.png';
+                }}
               />
               <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 rounded-b-lg">
-                <h3 className="text-white font-bold text-base drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>{user.name}</h3>
-                <p className="text-cyan-200 text-xs drop-shadow-lg font-medium" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>{user.artType}</p>
-                <p className="text-gray-200 text-xs drop-shadow-lg" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>{user.location}</p>
+                <h3 className="text-white font-bold text-base drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                  {creator.displayName}
+                </h3>
+                <p className="text-cyan-200 text-xs drop-shadow-lg font-medium" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+                  {formatArtType(creator.artType)}
+                </p>
+                <p className="text-gray-200 text-xs drop-shadow-lg" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
+                  @{creator.username}
+                </p>
               </div>
             </div>
           </SwiperSlide>
