@@ -47,7 +47,7 @@ async function getProfile(username) {
     return profileData;
   } catch (err) {
     console.error('Page: Error fetching profile:', err);
-    return null;
+  return null;
   }
 }
 

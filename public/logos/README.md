@@ -1,6 +1,6 @@
 # Kloud 9 Logo Files
 
-This directory contains the official logo files for Kloud 9. The logos are available in different formats and variations to ensure optimal usage across different contexts.
+This directory contains the official logo files for Kloud 9 in SVG format. The logos are available in different variations to ensure optimal usage across different contexts.
 
 ## Available Formats
 
@@ -16,7 +16,7 @@ This directory contains the official logo files for Kloud 9. The logos are avail
 
 ### Size Recommendations
 - Full Logo: Minimum width of 120px
-- Icon Only: Minimum width of 32px
+- Icon Only: Minimum width of 32px (except for favicon)
 - Maintain aspect ratio when resizing
 
 ### Color Variations
