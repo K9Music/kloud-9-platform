@@ -60,7 +60,7 @@ export default function Footer() {
             <h4 className="text-white font-semibold mb-3">Follow Us</h4>
             <div className="flex space-x-4">
               <a
-                href="https://instagram.com/kloud9"
+                href="https://instagram.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-pink-500 transition-colors duration-200"
@@ -69,7 +69,7 @@ export default function Footer() {
                 <FaInstagram className="text-xl" />
               </a>
               <a
-                href="https://x.com/kloud9"
+                href="https://x.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-white transition-colors duration-200"
@@ -78,7 +78,7 @@ export default function Footer() {
                 <SiX className="text-xl" />
               </a>
               <a
-                href="https://linkedin.com/company/kloud9"
+                href="https://linkedin.com/company/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
@@ -87,7 +87,7 @@ export default function Footer() {
                 <FaLinkedin className="text-xl" />
               </a>
               <a
-                href="https://facebook.com/kloud9"
+                href="https://facebook.com/"
                 target="_blank"
                 rel="noopener noreferrer"
                 className="text-gray-400 hover:text-blue-600 transition-colors duration-200"
