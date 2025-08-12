@@ -293,27 +293,27 @@ return type ? type.showcases : [];
       ...prev,
       [`${platform}${idx > 0 ? idx + 1 : ''}`]: validateShowcaseUrl(value),
     }));
-};
+  };
 
-  const handleRemoveShowcase = (platform, idx) => {
-    setForm((prev) => {
+const handleRemoveShowcase = (platform, idx) => {
+  setForm((prev) => {
       const updated = { ...prev };
       delete updated.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`];
       return updated;
     });
   };
 
-  const handleAddShowcase = (platform) => {
-    setForm((prev) => {
+const handleAddShowcase = (platform) => {
+  setForm((prev) => {
       const updated = { ...prev };
-      let count = 1;
+    let count = 1;
       while (updated.showcase[`${platform}${count > 1 ? count : ''}`]) {
-        count++;
-      }
+      count++;
+    }
       updated.showcase[`${platform}${count > 1 ? count : ''}`] = '';
       return updated;
-    });
-  };
+  });
+};
 
 // Custom Links logic
 const handleCustomLinkChange = (idx, value) => {
@@ -902,10 +902,10 @@ setMessage('Server error.');
           </div>
         )}
         {getOptionalFields(form.artType).includes('shotBy') && (
-          <div className="mb-4">
+<div className="mb-4">
             <label className="block mb-1 font-semibold" htmlFor="shotBy">
               Shot By <span className="text-xs text-cyan-300">(optional)</span>
-            </label>
+</label>
             <input
               type="text"
               name="shotBy"
@@ -952,7 +952,7 @@ Add links to your works on any of these platforms. If your platform is not liste
                   </label>
     ))
     : [...getShowcasePlatforms(form.artType), 'otherPlatform'].map((platform) => (
-        <label key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer shadow bg-white/10 backdrop-blur-sm text-white border border-white/20">
+<label key={platform} className="flex items-center gap-2 px-3 py-2 rounded-lg cursor-pointer shadow bg-white/10 backdrop-blur-sm text-white border border-white/20">
           <input
   type="checkbox"
   checked={form.showcase[`${platform}Checked`] || false}
@@ -978,7 +978,7 @@ Add links to your works on any of these platforms. If your platform is not liste
 : platform.charAt(0).toUpperCase() + platform.slice(1)}
 </span>
                   </label>
-    ))}
+))}
 </div>
 {/* Platform link fields with labels and dividers */}
 {form.artType === 'other' ? (
@@ -1025,66 +1025,66 @@ Add links to your works on any of these platforms. If your platform is not liste
   )
 ) : (
   [...getShowcasePlatforms(form.artType), 'otherPlatform'].map((platform, i, arr) =>
-    form.showcase[`${platform}Checked`] ? (
-      <div key={platform} className="mb-2">
-        <div className="flex items-center gap-2 mb-1">
+  form.showcase[`${platform}Checked`] ? (
+    <div key={platform} className="mb-2">
+      <div className="flex items-center gap-2 mb-1">
+        {platform === 'otherPlatform'
+          ? <FaLink className="inline text-blue-500 mr-1" />
+          : (PLATFORM_ICONS[platform] || <FaLink className="inline text-blue-500 mr-1" />)}
+        <span className="font-semibold">
           {platform === 'otherPlatform'
-            ? <FaLink className="inline text-blue-500 mr-1" />
-            : (PLATFORM_ICONS[platform] || <FaLink className="inline text-blue-500 mr-1" />)}
-          <span className="font-semibold">
-            {platform === 'otherPlatform'
-              ? 'Other Platform'
-              : platform.charAt(0).toUpperCase() + platform.slice(1)}
-          </span>
-        </div>
-        {[0, 1, 2].map((idx) =>
-          form.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] !== undefined ||
-          (idx === 0 && form.showcase[platform] !== undefined)
-            ? (
-              <div key={platform + idx} className="flex items-center gap-2 mb-2">
-                <input
-                  type="url"
-                  placeholder={
-                    platform === 'otherPlatform'
-                      ? 'Paste a link to your work on another platform'
-                      : `Paste a link to your work on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`
-                  }
-                  value={form.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] !== undefined
-                    ? form.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`]
-                    : form.showcase[platform] || ''}
+            ? 'Other Platform'
+            : platform.charAt(0).toUpperCase() + platform.slice(1)}
+        </span>
+      </div>
+      {[0, 1, 2].map((idx) =>
+        form.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] !== undefined ||
+        (idx === 0 && form.showcase[platform] !== undefined)
+          ? (
+            <div key={platform + idx} className="flex items-center gap-2 mb-2">
+                  <input
+                    type="url"
+  placeholder={
+    platform === 'otherPlatform'
+      ? 'Paste a link to your work on another platform'
+      : `Paste a link to your work on ${platform.charAt(0).toUpperCase() + platform.slice(1)}`
+  }
+  value={form.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`] !== undefined
+    ? form.showcase[`${platform}${idx > 0 ? idx + 1 : ''}`]
+    : form.showcase[platform] || ''}
                   onChange={(e) => handleShowcaseChange(platform, idx, e.target.value)}
                   onBlur={(e) => handleShowcaseBlur(platform, idx, e.target.value)}
                   className={`block w-full p-3 rounded-lg border ${showcaseErrors[`${platform}${idx > 0 ? idx + 1 : ''}`] ? 'border-red-500' : 'border-white/20'} bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400`}
-                  required
-                />
+  required
+/>
                 {showcaseErrors[`${platform}${idx > 0 ? idx + 1 : ''}`] && (
                   <span className="text-red-400 text-xs ml-2">{showcaseErrors[`${platform}${idx > 0 ? idx + 1 : ''}`]}</span>
                 )}
-                {idx > 0 && (
-                  <button
-                    type="button"
-                    onClick={() => handleRemoveShowcase(platform, idx)}
-                    className="text-red-400 hover:text-red-600 text-lg font-bold"
-                  >
-                    &times;
-                  </button>
-                )}
-              </div>
-            ) : null
-        )}
-        {Object.keys(form.showcase).filter((key) =>
-          key.startsWith(platform) && !key.endsWith('Checked')
-        ).length < 3 && (
-          <button
-            type="button"
-            onClick={() => handleAddShowcase(platform)}
-            className="text-cyan-400 hover:text-cyan-600 text-sm font-semibold"
-          >
-            + Add another link
-          </button>
-        )}
-      </div>
-    ) : null
+              {idx > 0 && (
+                <button
+                  type="button"
+                  onClick={() => handleRemoveShowcase(platform, idx)}
+                  className="text-red-400 hover:text-red-600 text-lg font-bold"
+                >
+                  &times;
+                </button>
+              )}
+            </div>
+          ) : null
+      )}
+      {Object.keys(form.showcase).filter((key) =>
+        key.startsWith(platform) && !key.endsWith('Checked')
+      ).length < 3 && (
+        <button
+          type="button"
+          onClick={() => handleAddShowcase(platform)}
+          className="text-cyan-400 hover:text-cyan-600 text-sm font-semibold"
+        >
+          + Add another link
+        </button>
+      )}
+    </div>
+  ) : null
   )
 )}
           </>

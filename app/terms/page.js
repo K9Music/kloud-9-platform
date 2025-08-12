@@ -60,7 +60,7 @@ export default function TermsPage() {
 
               <h2 className="text-2xl font-semibold text-white mb-4">9. Contact Information</h2>
               <p className="mb-6">
-                If you have any questions about these Terms of Service, please contact us at legal@kloud9.com
+                If you have any questions about these Terms of Service, please contact us at kloud9@k9music.com
               </p>
 
               <p className="text-sm text-cyan-300 mt-8">
