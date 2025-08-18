@@ -2,6 +2,7 @@ import dbConnect from '../../../lib/mongodb.js';
 import Profile from '../../../models/Profile.js';
 import bcrypt from 'bcryptjs';
 import { sanitizeObject, isValidProfileInput } from '../../../lib/validation';
+import { subscribeToEmailOctopus } from '../../../lib/emailoctopus';
 
 export async function POST(req) {
   await dbConnect();
@@ -27,6 +28,23 @@ export async function POST(req) {
       username: data.username.toLowerCase(),
       password: hashedPassword,
     });
+    
+    // Subscribe the new creator to EmailOctopus list (non-fatal on failure)
+    try {
+      const tags = [];
+      if (data.artType) tags.push(data.artType);
+      tags.push('creator', 'app-signup');
+      const eoResult = await subscribeToEmailOctopus({
+        email: data.email,
+        name: data.name,
+        tags,
+      });
+      if (!eoResult.ok && !eoResult.skipped) {
+        console.warn('EmailOctopus subscribe failed:', eoResult);
+      }
+    } catch (eoErr) {
+      console.warn('EmailOctopus subscribe error:', eoErr);
+    }
     const profileData = profile.toObject();
     delete profileData.password;
     return new Response(JSON.stringify(profileData), { status: 201 });
