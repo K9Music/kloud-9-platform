@@ -34,15 +34,20 @@ async function getProfile(username) {
     console.log('Page: Fetching profile for username:', username);
     await dbConnect();
     
-    const profile = await Profile.findOne({ username: username.toLowerCase() });
+    const doc = await Profile.findOne({ username: username.toLowerCase() }).lean();
     
-    if (!profile) {
+    if (!doc) {
       console.log('Page: Profile not found for username:', username);
       return null;
     }
     
-    const profileData = profile.toObject();
-    delete profileData.password;
+    const { password, __v, _id, resetToken, ...rest } = doc;
+    const profileData = {
+      ...rest,
+      id: _id?.toString?.(),
+      _id: _id?.toString?.(),
+      resetToken: undefined,
+    };
     console.log('Page: Profile found:', profileData.username);
     return profileData;
   } catch (err) {
@@ -56,7 +61,8 @@ function toSentenceCase(str) {
   return str.charAt(0).toUpperCase() + str.slice(1).toLowerCase();
 }
 
-export default async function PublicProfilePage({ params }) {
+export default async function PublicProfilePage(context) {
+  const params = await context.params;
   if (!params || !params.username) {
     return (
       <div className="min-h-screen flex flex-col">
