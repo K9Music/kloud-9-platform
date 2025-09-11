@@ -18,16 +18,15 @@ export default function Footer() {
           {/* Company Info */}
           <div className="lg:col-span-1">
             <div className="flex items-center space-x-2 mb-4">
-              <FaPalette className="text-2xl text-cyan-400" />
+              <FaPalette className="text-2xl text-cyan-400 scale-x-[-1]" />
               <span className={`text-xl font-bold text-white ${cinzel.className}`}>Kloud 9</span>
             </div>
             <p className="text-cyan-200 mb-2 italic">A self-sustaining ecosystem, powered by art</p>
             <p className="text-gray-400 text-sm">
-              Connecting creative professionals and clients worldwide through our innovative platform.
             </p>
 
             {/* Newsletter moved to left side */}
-            <div className="mt-8 pt-5 border-t border-white/10">
+            <div className="mt-28 pt-8 border-t border-white/10">
               <h4 className="text-white font-semibold mb-3">Subscribe to our newsletter</h4>
               <NewsletterForm />
               <p className="text-xs text-gray-400 mt-2">By subscribing, you agree to receive updates from Kloud 9. You can unsubscribe anytime.</p>
@@ -70,7 +69,7 @@ export default function Footer() {
               <h4 className="text-white font-semibold mb-3">Follow Us</h4>
               <div className="flex space-x-4">
                 <a
-                  href="https://instagram.com/"
+                  href="https://instagram.com/kloud9africa"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-pink-500 transition-colors duration-200"
@@ -79,7 +78,7 @@ export default function Footer() {
                   <FaInstagram className="text-xl" />
                 </a>
                 <a
-                  href="https://x.com/"
+                  href="https://x.com/kloud9africa"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-white transition-colors duration-200"
@@ -88,7 +87,7 @@ export default function Footer() {
                   <SiX className="text-xl" />
                 </a>
                 <a
-                  href="https://linkedin.com/company/"
+                  href="https://linkedin.com/company/kloud9africa"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-blue-500 transition-colors duration-200"
@@ -97,7 +96,7 @@ export default function Footer() {
                   <FaLinkedin className="text-xl" />
                 </a>
                 <a
-                  href="https://facebook.com/"
+                  href="https://facebook.com/kloud9africa"
                   target="_blank"
                   rel="noopener noreferrer"
                   className="text-gray-400 hover:text-blue-600 transition-colors duration-200"
@@ -113,7 +112,7 @@ export default function Footer() {
         {/* Copyright */}
         <div className="pt-8 border-t border-white/10 text-center">
           <p className="text-gray-400">
-            &copy; {currentYear} Kloud 9. All rights reserved. Connecting creative professionals and clients worldwide.
+            &copy; {currentYear} Kloud 9. All rights reserved. Art is profitable.
           </p>
         </div>
       </div>
