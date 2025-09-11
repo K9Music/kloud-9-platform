@@ -1,5 +1,6 @@
 "use client";
 import React, { useState, useEffect } from "react";
+import Link from "next/link";
 import { Swiper, SwiperSlide } from "swiper/react";
 import { EffectCoverflow, Pagination, Autoplay } from "swiper/modules";
 import "swiper/css";
@@ -76,11 +77,16 @@ const UserCarousel: React.FC = () => {
         effect="coverflow"
         grabCursor={true}
         centeredSlides={true}
-        slidesPerView={creators.length >= 3 ? 3 : creators.length}
+        spaceBetween={16}
+        breakpoints={{
+          0: { slidesPerView: 1.2 },
+          640: { slidesPerView: 2 },
+          1024: { slidesPerView: creators.length >= 3 ? 3 : creators.length },
+        }}
         coverflowEffect={{
-          rotate: 50,
+          rotate: 35,
           stretch: 0,
-          depth: 100,
+          depth: 120,
           modifier: 1,
           slideShadows: true,
         }}
@@ -88,34 +94,35 @@ const UserCarousel: React.FC = () => {
         autoplay={{ delay: 4000, disableOnInteraction: false }}
         loop={creators.length > 3}
         modules={[EffectCoverflow, Pagination, Autoplay]}
-        className="max-w-5xl mx-auto"
-        style={{ paddingBottom: "40px", paddingTop: "20px", paddingLeft: "40px", paddingRight: "40px", overflow: "visible" }}
+        className="max-w-6xl mx-auto"
+        style={{ paddingBottom: "40px", paddingTop: "10px", paddingLeft: "16px", paddingRight: "16px", overflow: "visible" }}
       >
         {creators.map((creator) => (
           <SwiperSlide key={creator.id}>
-            <div className="relative">
-              <img
-                src={creator.img}
-                alt={creator.name}
-                className="rounded-lg border-4 border-cyan-400 shadow-lg bg-white w-full h-full"
-                style={{ objectFit: "contain", padding: "8px" }}
-                onError={(e) => {
-                  const target = e.target as HTMLImageElement;
-                  target.src = '/default-avatar.png';
-                }}
-              />
-              <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 rounded-b-lg">
-                <h3 className="text-white font-bold text-base drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
-                  {creator.displayName}
-                </h3>
-                <p className="text-cyan-200 text-xs drop-shadow-lg font-medium" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
-                  {formatArtType(creator.artType)}
-                </p>
-                <p className="text-gray-200 text-xs drop-shadow-lg" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
-                  @{creator.username}
-                </p>
+            <Link href={`/profile/${creator.username}`} className="block">
+              <div className="relative">
+                <img
+                  src={creator.img}
+                  alt={creator.name}
+                  className="rounded-lg border-4 border-cyan-400 shadow-lg bg-white w-full h-64 sm:h-72 md:h-80 object-cover"
+                  onError={(e) => {
+                    const target = e.target as HTMLImageElement;
+                    target.src = '/default-avatar.png';
+                  }}
+                />
+                <div className="absolute bottom-0 left-0 right-0 bg-gradient-to-t from-black/90 via-black/70 to-transparent p-4 rounded-b-lg">
+                  <h3 className="text-white font-bold text-base drop-shadow-lg" style={{ textShadow: '2px 2px 4px rgba(0,0,0,0.8)' }}>
+                    {creator.displayName}
+                  </h3>
+                  <p className="text-cyan-200 text-xs drop-shadow-lg font-medium" style={{ textShadow: '1px 1px 3px rgba(0,0,0,0.8)' }}>
+                    {formatArtType(creator.artType)}
+                  </p>
+                  <p className="text-gray-200 text-xs drop-shadow-lg" style={{ textShadow: '1px 1px 2px rgba(0,0,0,0.8)' }}>
+                    @{creator.username}
+                  </p>
+                </div>
               </div>
-            </div>
+            </Link>
           </SwiperSlide>
         ))}
       </Swiper>

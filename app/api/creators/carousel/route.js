@@ -61,7 +61,7 @@ export async function GET() {
       }
 
       return {
-        id: creatorData._id,
+        id: creatorData._id.toString(),
         name: creatorData.name,
         displayName: displayName,
         artType: creatorData.artType,
