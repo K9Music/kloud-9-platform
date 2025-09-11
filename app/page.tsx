@@ -21,9 +21,24 @@ export default function Home() {
           <h1 className="text-4xl md:text-5xl font-bold text-white mb-6">
             Discover Top Creative Talent. We Handle the Rest.
           </h1>
-          <p className="text-xl md:text-2xl text-gray-300 mb-8 max-w-3xl mx-auto">
-            Browse a curated ecosystem of creators. When you find the perfect fit, Kloud 9 manages the connection and business process—ensuring a seamless, professional experience for both clients and creators.
-          </p>
+          <ul className="mt-2 mb-8 max-w-3xl mx-auto grid gap-2 text-lg md:text-xl text-cyan-100 text-center place-items-center">
+            <li className="flex items-start gap-2 justify-center">
+              <span className="mt-2 h-2 w-2 rounded-full bg-cyan-400"></span>
+              <span>Browse a curated list of creators</span>
+            </li>
+            <li className="flex items-start gap-2 justify-center">
+              <span className="mt-2 h-2 w-2 rounded-full bg-cyan-400"></span>
+              <span>Filter by art type, username, creator name</span>
+            </li>
+            <li className="flex items-start gap-2 justify-center">
+              <span className="mt-2 h-2 w-2 rounded-full bg-cyan-400"></span>
+              <span>View profiles and explore portfolios</span>
+            </li>
+            <li className="flex items-start gap-2 justify-center">
+              <span className="mt-2 h-2 w-2 rounded-full bg-cyan-400"></span>
+              <span>We manage the connection and business process</span>
+            </li>
+          </ul>
           <div className="flex flex-col sm:flex-row gap-4 justify-center items-center">
             <Link 
               href="/profiles"
@@ -36,7 +51,7 @@ export default function Home() {
               href="/create-profile"
               className="border-2 border-cyan-400 text-cyan-400 hover:bg-cyan-400 hover:text-white px-8 py-4 rounded-xl text-lg font-semibold transition-all duration-200 flex items-center space-x-2"
             >
-              <FaPalette />
+              <FaPalette className="scale-x-[-1]" />
               <span>Join as a Creator</span>
             </Link>
           </div>
@@ -79,17 +94,17 @@ export default function Home() {
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">End-to-End Project Facilitation</h3>
               <p className="text-gray-300 leading-relaxed">
-                From your first inquiry to project completion, Kloud 9 ensures a seamless, professional experience for both clients and creators—managing every step and earning our commission.
+                From your first inquiry to project completion, Kloud 9 ensures a smooth, professional experience for both clients and creators, managing every step efficiently.
               </p>
             </div>
             {/* New Feature Card for Ecosystem & Opportunities */}
             <div className="bg-white/10 backdrop-blur-sm rounded-2xl p-8 border border-white/20 hover:border-cyan-400/50 transition-all duration-300 flex flex-col justify-between">
               <div className="w-16 h-16 bg-gradient-to-r from-cyan-400 to-blue-400 rounded-xl flex items-center justify-center mb-6">
-                <FaPalette className="text-2xl text-white" />
+                <FaPalette className="text-2xl text-white scale-x-[-1]" />
               </div>
               <h3 className="text-2xl font-bold text-white mb-4">A Self-Sustaining Ecosystem</h3>
               <p className="text-gray-300 leading-relaxed">
-                Kloud 9 is more than a platform—it's an ecosystem where creators gain exposure and clients access top talent, all with the assurance of professional management and support.
+                Kloud 9 is an ecosystem where creators gain exposure and clients access top talent, all with the assurance of professional management and support.
               </p>
             </div>
           </div>
