@@ -94,7 +94,7 @@ export default function AboutPage() {
           <div className="bg-slate-800 rounded-2xl p-8 mb-12 border border-cyan-900">
             <div className="flex items-center gap-4 mb-6">
               <div className="w-12 h-12 bg-gradient-to-r from-cyan-500 to-white rounded-xl flex items-center justify-center">
-                <FaPalette className="text-2xl text-white" />
+                <FaPalette className="text-2xl text-white scale-x-[-1]" />
               </div>
               <h2 className="text-3xl font-bold text-white">Our Values</h2>
             </div>
