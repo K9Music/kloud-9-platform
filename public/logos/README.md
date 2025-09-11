@@ -4,13 +4,21 @@ This directory contains the official logo files for Kloud 9. The logos are avail
 
 ## Available Formats
 
-### Full Logo (Icon + Text)
+### Legacy SVGs (kept for compatibility)
 - `logo-full-light.svg` - Full logo in light colors for dark backgrounds
 - `logo-full-dark.svg` - Full logo in dark colors for light backgrounds
-
-### Icon Only
 - `icon-light.svg` - Icon in light colors for dark backgrounds
 - `icon-dark.svg` - Icon in dark colors for light backgrounds
+
+### New Canva-derived Assets (PNG → SVG)
+The following files were imported from Canva as PNGs and vectorized to SVGs for scalability. Prefer these when matching the latest branding from Canva.
+
+- `Kloud 9 logo & name (black background).svg`
+- `Kloud 9 logo & name (blue background).svg`
+- `Kloud 9 logo & name (white background).svg`
+- `Kloud 9 logo only (black background).svg`
+- `Kloud 9 logo only (blue background).svg`
+- `Kloud 9 logo only (white background).svg`
 
 ## Usage Guidelines
 
@@ -20,12 +28,7 @@ This directory contains the official logo files for Kloud 9. The logos are avail
 - Maintain aspect ratio when resizing
 
 ### Color Variations
-- Light Version: Use on dark backgrounds
-  - Icon: #22D3EE (Cyan)
-  - Text: #FFFFFF (White)
-- Dark Version: Use on light backgrounds
-  - Icon: #0891B2 (Dark Cyan)
-  - Text: #1E293B (Slate)
+- Use the background-specific variants as named (black/blue/white background) to match the intended context.
 
 ### Clear Space
 - Maintain padding around the logo of at least half the logo's height
@@ -33,13 +36,24 @@ This directory contains the official logo files for Kloud 9. The logos are avail
 
 ### Don'ts
 - Don't stretch or distort the logo
-- Don't change the logo colors
+- Don't recolor exported PNGs/SVGs arbitrarily; keep brand consistency
 - Don't add effects (shadows, gradients, etc.)
 - Don't rotate the logo
-- Don't use the light version on light backgrounds or vice versa
 
 ## Technical Details
-- Format: SVG (Scalable Vector Graphics)
-- Font: Cinzel (700 weight)
+- Formats: SVG (vectorized from PNG) and PNG
 - Viewport: Preserved aspect ratio
-- Resolution independent 
+- Resolution independent (SVG)
+
+### Build Scripts
+- Vectorization script: `scripts/vectorize-logos.cjs`
+- Input directory: `public/logos/pngs`
+- Output directory: `public/logos`
+- Dependencies: `imagetracerjs`, `canvas`
+
+To regenerate SVGs from PNGs:
+
+```bash
+npm install
+node scripts/vectorize-logos.cjs
+```
