@@ -13,7 +13,7 @@ export default function Header() {
     <nav className="flex justify-between items-center px-6 py-4 md:px-12 lg:px-24 bg-gradient-to-br from-slate-900 via-cyan-900 to-slate-900 relative z-50">
       {/* Logo */}
       <Link href="/" className="flex items-center space-x-2 group">
-        <FaPalette className="text-3xl text-cyan-400 group-hover:text-cyan-300 transition-colors duration-200" />
+        <FaPalette className="text-3xl text-cyan-400 group-hover:text-cyan-300 transition-colors duration-200 scale-x-[-1]" />
         <span className={`text-2xl font-bold text-white group-hover:text-cyan-200 transition-colors duration-200 ${cinzel.className}`}>Kloud 9</span>
       </Link>
 
