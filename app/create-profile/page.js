@@ -674,7 +674,7 @@ setMessage('Server error.');
             onChange={handleChange}
             onFocus={() => setShowArtTypeHelp(true)}
             onBlur={() => setShowArtTypeHelp(false)}
-            className="block w-full p-3 rounded-lg border border-white/20 bg-white/10 backdrop-blur-sm text-white focus:ring-2 focus:ring-cyan-400"
+            className="block w-full p-3 rounded-lg border border-cyan-700 bg-slate-900 text-cyan-100 focus:ring-2 focus:ring-cyan-400"
             required
           >
             <option value="">Select art type</option>
