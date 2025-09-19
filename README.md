@@ -2,6 +2,8 @@
 
 A self-sustaining ecosystem, powered by art. A platform where creative professionals can showcase their art, get booked by companies, and get paid for their work.
 
+[![GitHub](https://img.shields.io/badge/GitHub-Repository-blue?style=flat-square&logo=github)](https://github.com/K9Music/kloud-9-platform)
+
 ## Getting Started
 
 First, run the development server:
