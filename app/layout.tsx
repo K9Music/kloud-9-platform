@@ -18,9 +18,9 @@ export const metadata: Metadata = {
   title: "Kloud 9",
   description: "A self-sustaining ecosystem, powered by art",
   icons: {
-    icon: '/logos/Kloud 9 logo only (blue background).svg',
-    shortcut: '/logos/Kloud 9 logo only (blue background).svg',
-    apple: '/logos/Kloud 9 logo only (blue background).svg',
+    icon: '/favicon.ico',
+    shortcut: '/favicon.ico',
+    apple: '/favicon.ico',
   },
 };
 
