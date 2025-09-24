@@ -99,6 +99,17 @@ shotBy: '',
   const [hasOpenedAgreement, setHasOpenedAgreement] = useState(false);
   const [hasClosedAfterOpen, setHasClosedAfterOpen] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = useState(false);
+
+  // Lock background scroll when agreement modal is open
+  useEffect(() => {
+    if (isAgreementOpen) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [isAgreementOpen]);
   const [message, setMessage] = useState('');
   const [genreSuggestions, setGenreSuggestions] = useState([]);
   const [styleSuggestions, setStyleSuggestions] = useState([]);
@@ -1172,7 +1183,11 @@ Add links to your works on any of these platforms. If your platform is not liste
       {step === STEPS.length - 1 && (
           <button
             type="submit"
-          className="ml-auto px-6 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold flex items-center gap-2"
+          className={`ml-auto px-6 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors ${
+            submitting || !agreementAccepted || !hasClosedAfterOpen
+              ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+              : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white'
+          }`}
           disabled={submitting || !agreementAccepted || !hasClosedAfterOpen}
           >
           {submitting && <span className="loader border-2 border-white border-t-cyan-400 rounded-full w-5 h-5 animate-spin"></span>}
