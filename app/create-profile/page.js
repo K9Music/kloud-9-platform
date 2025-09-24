@@ -94,6 +94,23 @@ skitmakerName: '',
 vixenName: '',
 shotBy: '',
   });
+  // Creator Agreement state
+  const [isAgreementOpen, setIsAgreementOpen] = useState(false);
+  const [hasOpenedAgreement, setHasOpenedAgreement] = useState(false);
+  const [hasClosedAfterOpen, setHasClosedAfterOpen] = useState(false);
+  const [agreementAccepted, setAgreementAccepted] = useState(false);
+  const [agreementOpenedAt, setAgreementOpenedAt] = useState(null);
+
+  // Lock background scroll when agreement modal is open
+  useEffect(() => {
+    if (isAgreementOpen) {
+      const original = document.body.style.overflow;
+      document.body.style.overflow = 'hidden';
+      return () => {
+        document.body.style.overflow = original;
+      };
+    }
+  }, [isAgreementOpen]);
   const [message, setMessage] = useState('');
   const [genreSuggestions, setGenreSuggestions] = useState([]);
   const [styleSuggestions, setStyleSuggestions] = useState([]);
@@ -1104,6 +1121,33 @@ Add links to your works on any of these platforms. If your platform is not liste
                 {/* Add more summary fields as needed */}
               </ul>
                 </div>
+
+            {/* Creator Agreement Gate */}
+            <div className="bg-white/10 p-4 rounded-lg mb-4 border border-white/20">
+              <h4 className="text-lg font-semibold mb-2">Kloud 9 Creator Agreement</h4>
+              <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold border border-cyan-700"
+                  onClick={() => { setIsAgreementOpen(true); setHasOpenedAgreement(true); setHasClosedAfterOpen(false); setAgreementOpenedAt(new Date()); }}
+                >
+                  Open Agreement
+                </button>
+                <label className={`inline-flex items-center gap-2 ${!hasClosedAfterOpen ? 'opacity-60 cursor-not-allowed' : ''}`}>
+                  <input
+                    type="checkbox"
+                    className="w-5 h-5 accent-cyan-500"
+                    disabled={!hasClosedAfterOpen}
+                    checked={agreementAccepted}
+                    onChange={(e) => setAgreementAccepted(e.target.checked)}
+                  />
+                  <span>I agree</span>
+                </label>
+              </div>
+              {!hasOpenedAgreement && (
+                <p className="text-xs text-cyan-300 mt-2">Please open the agreement to enable the checkbox.</p>
+              )}
+            </div>
           </>
         );
       default:
@@ -1139,8 +1183,12 @@ Add links to your works on any of these platforms. If your platform is not liste
       {step === STEPS.length - 1 && (
           <button
             type="submit"
-          className="ml-auto px-6 py-2 rounded-lg bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white font-bold flex items-center gap-2"
-          disabled={submitting}
+          className={`ml-auto px-6 py-2 rounded-lg font-bold flex items-center gap-2 transition-colors ${
+            submitting || !agreementAccepted || !hasClosedAfterOpen
+              ? 'bg-gray-600 text-gray-300 cursor-not-allowed'
+              : 'bg-gradient-to-r from-cyan-600 to-blue-600 hover:from-cyan-700 hover:to-blue-700 text-white'
+          }`}
+          disabled={submitting || !agreementAccepted || !hasClosedAfterOpen}
           >
           {submitting && <span className="loader border-2 border-white border-t-cyan-400 rounded-full w-5 h-5 animate-spin"></span>}
             Create Profile
@@ -1173,6 +1221,54 @@ Add links to your works on any of these platforms. If your platform is not liste
             <Link href="/login" className="text-cyan-300 font-semibold hover:underline focus:outline-none focus:underline">Sign in</Link>
           </div>
         </form>
+        {/* Agreement Modal */}
+        {isAgreementOpen && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center overscroll-contain">
+            <div className="absolute inset-0 bg-black/60" onClick={() => { setIsAgreementOpen(false); setHasClosedAfterOpen(true); }} />
+            <div className="relative z-10 w-full max-w-3xl max-h-[80vh] bg-slate-900 border border-cyan-800 rounded-xl shadow-xl overflow-hidden">
+              <div className="px-4 py-3 border-b border-cyan-800 flex items-center justify-between">
+                <h5 className="text-cyan-200 font-semibold">Kloud 9 Creator Agreement</h5>
+                <button
+                  type="button"
+                  className="text-cyan-300 hover:text-cyan-100"
+                  onClick={() => { setIsAgreementOpen(false); setHasClosedAfterOpen(true); }}
+                >
+                  Close
+                </button>
+              </div>
+              <div className="p-4 overflow-y-auto max-h-[60vh] text-cyan-100 space-y-3" style={{ WebkitOverflowScrolling: 'touch' }}>
+                <p><b>Effective Date:</b> {(
+                  agreementOpenedAt ? new Date(agreementOpenedAt) : new Date()
+                ).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
+                <p>This Creator Agreement (“Agreement”) is entered into by and between you (“Creator”) and Kloud 9, a platform operated by K9 Music Limited (“Company”). By creating an account, showcasing works, or participating in any project facilitated by Kloud 9, you acknowledge that you have read, understood, and agreed to the terms and conditions of this Agreement.</p>
+                <p><b>Preliminary Note on Rights</b><br/>For commissioned projects, you agree to assign to Kloud 9 all necessary rights in the works produced, ensuring Kloud 9 can license, distribute, and enforce client usage. This assignment does not affect works you create independently outside of Kloud 9.</p>
+                <p><b>1. Eligibility and Registration</b><br/>1.1 To participate on Kloud 9, you must be at least 18 years old or the age of majority in your jurisdiction.<br/>1.2 You agree to provide accurate, complete, and up-to-date information during registration.<br/>1.3 You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
+                <p><b>2. Engagement on Kloud 9</b><br/>2.1 Creators may showcase their works on the platform for the purpose of attracting client interest.<br/>2.2 Kloud 9 facilitates project opportunities by connecting clients with creators through the platform.</p>
+                <p><b>3. Creator Obligations</b><br/>3.1 You shall perform services and deliver works in a professional and timely manner consistent with industry standards.<br/>3.2 You shall comply with all applicable laws, regulations, and third-party rights in connection with your works.<br/>3.3 You shall not upload, display, or distribute unlawful, offensive, or infringing content on the platform.</p>
+                <p><b>4. Intellectual Property</b><br/>4.1 Unless otherwise agreed in writing, you assign and transfer to Kloud 9 all rights, title, and interest (including copyright) in any works created under projects commissioned via the platform.<br/>4.2 Kloud 9 shall hold such rights for the purpose of enabling client usage, licensing, and enforcement.<br/>4.3 In addition to portfolio materials owned by you and not commissioned through Kloud 9, you may display approved works commissioned on Kloud 9 on your Kloud 9 profile or personal portfolio (including personal websites or social media) for self-promotion only, provided you do not claim ownership or license such works to third parties..</p>
+                <p><b>5. Payments</b><br/>5.1 Payments from clients are held in escrow by Kloud 9 until completion of the project.<br/>5.2 Upon client approval of the project, Kloud 9 shall release payment to the Creator without undue delay.<br/>5.3 In the event that project terms are not met, refunds shall be processed to the client in accordance with Kloud 9’s policies.<br/>5.4 If a project is canceled after the Creator has performed work in line with the agreed brief, the Creator shall be entitled to a rejection fee, as determined and communicated by Kloud 9.<br/>5.5 Clients are entitled to a defined number of free revisions, after which additional revisions may attract fees. Such fees will be communicated to the Creator by Kloud 9 as necessary.</p>
+                <p><b>6. Non-Circumvention</b><br/>6.1 You agree not to circumvent, bypass, or attempt to bypass Kloud 9 in any manner by engaging directly with clients introduced through the platform, whether during or after a project.<br/>6.2 Any attempt to bypass Kloud 9 shall result in immediate account termination and may subject you to legal action, including but not limited to claims for damages and injunctive relief.</p>
+                <p><b>7. Dispute Resolution</b><br/>7.1 In the event of a dispute between you and a client, Kloud 9 shall mediate the matter in good faith.<br/>7.2 Kloud 9’s decision on dispute outcomes shall be final within the platform. This does not restrict either party’s rights to pursue remedies under applicable law.<br/>7.3 Creators agree to cooperate with Kloud 9 in resolving disputes and to accept outcomes in accordance with this Agreement.</p>
+                <p><b>8. External Projects</b><br/>8.1 Kloud 9 protections, dispute resolution processes, and guarantees apply only to projects initiated and managed through the Kloud 9 platform.<br/>8.2 Kloud 9 is unable to mediate disputes, enforce payments, or provide remedies for projects undertaken outside the platform.</p>
+                <p><b>9. Limitation of Liability</b><br/>9.1 Kloud 9’s total liability under this Agreement shall be limited to amounts actually paid to you under eligible projects in the past six (6) months.<br/>9.2 Kloud 9 shall not be liable for indirect, incidental, special, consequential, or punitive damages arising out of or related to this Agreement.</p>
+                <p><b>10. Confidentiality</b><br/>10.1 You agree to maintain the confidentiality of all non-public information you obtain through projects on Kloud 9.<br/>10.2 You shall not disclose client information, project details, or Kloud 9 operational processes without prior written consent.</p>
+                <p><b>11. Termination</b><br/>11.1 Kloud 9 may suspend or terminate your account at any time for breach of this Agreement, fraudulent activity, or conduct deemed materially harmful to the platform or its users.<br/>11.2 You may terminate your account at any time by written notice to Kloud 9.<br/>11.3 Termination shall not affect rights and obligations accrued prior to termination, including intellectual property transfers.</p>
+                <p><b>12. Governing Law and Jurisdiction</b><br/>12.1 This Agreement shall be governed by and construed in accordance with the laws of Nigeria.<br/>12.2 Any disputes arising out of or in connection with this Agreement shall be subject to the exclusive jurisdiction of the courts of Nigeria.</p>
+                <p><b>13. Miscellaneous</b><br/>13.1 Entire Agreement. This Agreement constitutes the entire understanding between you and Kloud 9 regarding its subject matter.<br/>13.2 Amendment. Kloud 9 may amend this Agreement from time to time. Continued use of the platform constitutes acceptance of the revised terms.<br/>13.3 Waiver. Failure to enforce any provision shall not constitute a waiver of that provision.<br/>13.4 Severability. If any provision is found unenforceable, the remaining provisions shall remain in effect.</p>
+                <p><b>Acceptance:</b><br/>By checking the acceptance box, you acknowledge that you have read, understood, and agreed to be bound by this Agreement.</p>
+              </div>
+              <div className="px-4 py-3 border-t border-cyan-800 flex justify-end">
+                <button
+                  type="button"
+                  className="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold"
+                  onClick={() => { setIsAgreementOpen(false); setHasClosedAfterOpen(true); }}
+                >
+                  I have read the agreement
+                </button>
+              </div>
+            </div>
+          </div>
+        )}
       </div>
       <Footer />
     </>
