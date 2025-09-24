@@ -1223,7 +1223,7 @@ Add links to your works on any of these platforms. If your platform is not liste
         </form>
         {/* Agreement Modal */}
         {isAgreementOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center">
+          <div className="fixed inset-0 z-50 flex items-center justify-center overscroll-contain">
             <div className="absolute inset-0 bg-black/60" onClick={() => { setIsAgreementOpen(false); setHasClosedAfterOpen(true); }} />
             <div className="relative z-10 w-full max-w-3xl max-h-[80vh] bg-slate-900 border border-cyan-800 rounded-xl shadow-xl overflow-hidden">
               <div className="px-4 py-3 border-b border-cyan-800 flex items-center justify-between">
@@ -1236,7 +1236,7 @@ Add links to your works on any of these platforms. If your platform is not liste
                   Close
                 </button>
               </div>
-              <div className="p-4 overflow-auto text-cyan-100 space-y-3">
+              <div className="p-4 overflow-y-auto max-h-[60vh] text-cyan-100 space-y-3" style={{ WebkitOverflowScrolling: 'touch' }}>
                 <p><b>Effective Date:</b> [Insert Date]</p>
                 <p>This Creator Agreement (“Agreement”) is entered into by and between you (“Creator”) and Kloud 9, a platform operated by K9 Music (“Company”). By creating an account, showcasing works, or participating in any project facilitated by Kloud 9, you acknowledge that you have read, understood, and agreed to the terms and conditions of this Agreement.</p>
                 <p><b>Preliminary Note on Rights</b><br/>For commissioned projects, you agree to assign to Kloud 9 all necessary rights in the works produced, ensuring Kloud 9 can license, distribute, and enforce client usage. This assignment does not affect works you create independently outside of Kloud 9.</p>
