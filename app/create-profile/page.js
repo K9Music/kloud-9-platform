@@ -1142,7 +1142,7 @@ Add links to your works on any of these platforms. If your platform is not liste
                     checked={agreementAccepted}
                     onChange={(e) => setAgreementAccepted(e.target.checked)}
                   />
-                  <span>I agree to the Kloud 9 Creator Agreement</span>
+                  <span>I agree</span>
                 </label>
               </div>
               {!hasOpenedAgreement && (
