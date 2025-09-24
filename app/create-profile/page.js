@@ -1125,7 +1125,6 @@ Add links to your works on any of these platforms. If your platform is not liste
             {/* Creator Agreement Gate */}
             <div className="bg-white/10 p-4 rounded-lg mb-4 border border-white/20">
               <h4 className="text-lg font-semibold mb-2">Kloud 9 Creator Agreement</h4>
-              <p className="text-sm text-cyan-200 mb-3">You must open and review the agreement before you can accept it and submit your profile.</p>
               <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:gap-4">
                 <button
                   type="button"
