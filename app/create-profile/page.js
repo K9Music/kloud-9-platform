@@ -99,6 +99,7 @@ shotBy: '',
   const [hasOpenedAgreement, setHasOpenedAgreement] = useState(false);
   const [hasClosedAfterOpen, setHasClosedAfterOpen] = useState(false);
   const [agreementAccepted, setAgreementAccepted] = useState(false);
+  const [agreementOpenedAt, setAgreementOpenedAt] = useState(null);
 
   // Lock background scroll when agreement modal is open
   useEffect(() => {
@@ -1129,7 +1130,7 @@ Add links to your works on any of these platforms. If your platform is not liste
                 <button
                   type="button"
                   className="px-4 py-2 rounded-lg bg-slate-800 hover:bg-slate-700 text-white font-semibold border border-cyan-700"
-                  onClick={() => { setIsAgreementOpen(true); setHasOpenedAgreement(true); setHasClosedAfterOpen(false); }}
+                  onClick={() => { setIsAgreementOpen(true); setHasOpenedAgreement(true); setHasClosedAfterOpen(false); setAgreementOpenedAt(new Date()); }}
                 >
                   Open Agreement
                 </button>
@@ -1237,7 +1238,9 @@ Add links to your works on any of these platforms. If your platform is not liste
                 </button>
               </div>
               <div className="p-4 overflow-y-auto max-h-[60vh] text-cyan-100 space-y-3" style={{ WebkitOverflowScrolling: 'touch' }}>
-                <p><b>Effective Date:</b> [Insert Date]</p>
+                <p><b>Effective Date:</b> {(
+                  agreementOpenedAt ? new Date(agreementOpenedAt) : new Date()
+                ).toLocaleDateString(undefined, { year: 'numeric', month: 'long', day: 'numeric' })}</p>
                 <p>This Creator Agreement (“Agreement”) is entered into by and between you (“Creator”) and Kloud 9, a platform operated by K9 Music Limited (“Company”). By creating an account, showcasing works, or participating in any project facilitated by Kloud 9, you acknowledge that you have read, understood, and agreed to the terms and conditions of this Agreement.</p>
                 <p><b>Preliminary Note on Rights</b><br/>For commissioned projects, you agree to assign to Kloud 9 all necessary rights in the works produced, ensuring Kloud 9 can license, distribute, and enforce client usage. This assignment does not affect works you create independently outside of Kloud 9.</p>
                 <p><b>1. Eligibility and Registration</b><br/>1.1 To participate on Kloud 9, you must be at least 18 years old or the age of majority in your jurisdiction.<br/>1.2 You agree to provide accurate, complete, and up-to-date information during registration.<br/>1.3 You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
