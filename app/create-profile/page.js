@@ -1238,7 +1238,7 @@ Add links to your works on any of these platforms. If your platform is not liste
               </div>
               <div className="p-4 overflow-y-auto max-h-[60vh] text-cyan-100 space-y-3" style={{ WebkitOverflowScrolling: 'touch' }}>
                 <p><b>Effective Date:</b> [Insert Date]</p>
-                <p>This Creator Agreement (“Agreement”) is entered into by and between you (“Creator”) and Kloud 9, a platform operated by K9 Music (“Company”). By creating an account, showcasing works, or participating in any project facilitated by Kloud 9, you acknowledge that you have read, understood, and agreed to the terms and conditions of this Agreement.</p>
+                <p>This Creator Agreement (“Agreement”) is entered into by and between you (“Creator”) and Kloud 9, a platform operated by K9 Music Limited (“Company”). By creating an account, showcasing works, or participating in any project facilitated by Kloud 9, you acknowledge that you have read, understood, and agreed to the terms and conditions of this Agreement.</p>
                 <p><b>Preliminary Note on Rights</b><br/>For commissioned projects, you agree to assign to Kloud 9 all necessary rights in the works produced, ensuring Kloud 9 can license, distribute, and enforce client usage. This assignment does not affect works you create independently outside of Kloud 9.</p>
                 <p><b>1. Eligibility and Registration</b><br/>1.1 To participate on Kloud 9, you must be at least 18 years old or the age of majority in your jurisdiction.<br/>1.2 You agree to provide accurate, complete, and up-to-date information during registration.<br/>1.3 You are responsible for maintaining the confidentiality of your account credentials and for all activities that occur under your account.</p>
                 <p><b>2. Engagement on Kloud 9</b><br/>2.1 Creators may showcase their works on the platform for the purpose of attracting client interest.<br/>2.2 Kloud 9 facilitates project opportunities by connecting clients with creators through the platform.</p>
@@ -1261,7 +1261,7 @@ Add links to your works on any of these platforms. If your platform is not liste
                   className="px-4 py-2 rounded-lg bg-cyan-600 hover:bg-cyan-700 text-white font-semibold"
                   onClick={() => { setIsAgreementOpen(false); setHasClosedAfterOpen(true); }}
                 >
-                  I have read and close
+                  I have read the agreement
                 </button>
               </div>
             </div>
