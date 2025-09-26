@@ -169,27 +169,32 @@ export default function ProfileClient({ profile, platformIcons }) {
                       {errors.email && <div id="email-error" className="text-red-400 text-xs mt-1">{errors.email}</div>}
                     </div>
                     <div className="mb-4">
-                      <label htmlFor="company" className="block text-cyan-200 font-medium mb-1">Company/Brand <span className="text-cyan-400 text-xs">(optional)</span></label>
+                      <label htmlFor="company" className="block text-cyan-200 font-medium mb-1">Company/Brand<span className="text-red-400">*</span></label>
                       <input
                         id="company"
                         name="company"
                         type="text"
-                        className="w-full rounded-lg border px-3 py-2 bg-slate-800 text-cyan-100 border-cyan-700 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
+                        className={`w-full rounded-lg border px-3 py-2 bg-slate-800 text-cyan-100 border-cyan-700 focus:ring-2 focus:ring-cyan-400 focus:outline-none ${errors.company ? 'border-red-500' : ''}`}
                         value={form.company}
                         onChange={handleChange}
+                        required
+                        aria-invalid={!!errors.company}
+                        aria-describedby={errors.company ? 'company-error' : undefined}
                         disabled={submitting}
                       />
                     </div>
-                    {/* Budget field (optional) */}
                     <div className="mb-4">
-                      <label htmlFor="budget" className="block text-cyan-200 font-medium mb-1">Budget <span className="text-cyan-400 text-xs">(optional)</span></label>
+                      <label htmlFor="budget" className="block text-cyan-200 font-medium mb-1">Budget<span className="text-red-400">*</span></label>
                       <input
                         id="budget"
                         name="budget"
                         type="text"
-                        className="w-full rounded-lg border px-3 py-2 bg-slate-800 text-cyan-100 border-cyan-700 focus:ring-2 focus:ring-cyan-400 focus:outline-none"
+                        className={`w-full rounded-lg border px-3 py-2 bg-slate-800 text-cyan-100 border-cyan-700 focus:ring-2 focus:ring-cyan-400 focus:outline-none ${errors.budget ? 'border-red-500' : ''}`}
                         value={form.budget}
                         onChange={handleChange}
+                        required
+                        aria-invalid={!!errors.budget}
+                        aria-describedby={errors.budget ? 'budget-error' : undefined}
                         disabled={submitting}
                       />
                     </div>
