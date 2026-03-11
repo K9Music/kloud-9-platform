@@ -15,7 +15,7 @@
     "dotenv": "^17.2.0",
     "keen-slider": "^6.8.6",
     "mongoose": "^8.16.4",
-    "next": "15.3.4",
+    "next": "15.3.8",
     "next-auth": "^5.0.0-beta.29",
     "nodemailer": "^6.10.1",
     "react": "^19.0.0",
